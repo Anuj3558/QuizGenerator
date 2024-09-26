@@ -49,7 +49,7 @@ const sidebarItems = [
     <>
       {/* Static Sidebar for Large Screens */}
       <div className="hidden md:block w-64 bg-gray-800 h-full p-4 border-r border-gray-700">
-        <h2 className="text-2xl font-bold mb-4 text-left">AI Quiz Gen</h2>
+       
         <nav className="space-y-4">
           {sidebarItems.map((item) => (
             <SidebarButton

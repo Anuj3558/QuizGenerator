@@ -19,28 +19,18 @@ import LoginPage from "./Compnents/Auth/LoginPage.jsx";
 function App() {
   return (
     <BrowserRouter>
-
+<Nav />
       <Routes>
         {/* Define routes for each page */}
         <Route path="/" element={<LandingPage />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/about" element={<AboutUs />} />
         <Route path="/quiz-analysis"element={<QuizAnalytics/>}/>
-        {/* <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} /> */}
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/signup" element={<SignUpPage />} />
       </Routes>
 
-    <Nav />
-      <Routes>
-        
-        {/* Define routes for each page */}
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/signup" element={<SignUpPage />} />
-        <Route path="/login" element={<LoginPage />} />
-        {/*
-        <Route path="/signup" element={<Signup />} /> */}
-       
-      </Routes>
+   
       <Footer />
 
     </BrowserRouter>

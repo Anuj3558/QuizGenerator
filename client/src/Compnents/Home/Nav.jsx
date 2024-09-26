@@ -2,19 +2,22 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Button } from "./ui/Button";
 import { Link } from "react-router-dom";
-import { Truck } from "lucide-react";
+import { Menu } from "lucide-react"; // Menu icon for mobile
 
 function Nav() {
-  // State to manage whether the user is logged in or not
   const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [isMenuOpen, setIsMenuOpen] = useState(false); // For mobile menu toggle
 
-  // Function to simulate login/logout (this can later be replaced with actual logic)
   const handleLogout = () => {
-    setIsLoggedIn(false); // Simulate user logging out
+    setIsLoggedIn(false);
   };
 
   const handleLogin = () => {
-    setIsLoggedIn(true); // Simulate user logging in
+    setIsLoggedIn(true);
+  };
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen); // Toggle mobile menu
   };
 
   return (
@@ -22,31 +25,29 @@ function Nav() {
       initial={{ y: -50, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.5 }}
-      className="flex justify-between items-center mb-16"
+      className="flex p-7 justify-between items-center backdrop-blur fixed w-full z-10"
     >
       {/* Logo */}
-      <div className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-600">
+     <Link to="/"> <div className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-600">
         AIQuizGen
+      </div></Link>
+
+      {/* Hamburger icon for mobile */}
+      <div className="lg:hidden">
+        <Menu onClick={toggleMenu} className="text-gray-300 cursor-pointer" />
       </div>
 
-      {/* Conditional Navigation Links */}
-      <div className="space-x-4">
+      {/* Conditional Navigation Links (Desktop View) */}
+      <div className={`space-x-4 ${isMenuOpen ? "block" : "hidden"} lg:flex`}>
         {isLoggedIn ? (
           <>
-            {/* Render when the user is logged in */}
             <Link to="/dashboard">
-              <Button
-                variant="ghost"
-                className="text-gray-300 hover:text-white"
-              >
+              <Button variant="ghost" className="text-gray-300 hover:text-white">
                 Dashboard
               </Button>
             </Link>
             <Link to="/about">
-              <Button
-                variant="ghost"
-                className="text-gray-300 hover:text-white"
-              >
+              <Button variant="ghost" className="text-gray-300 hover:text-white">
                 About Us
               </Button>
             </Link>
@@ -59,7 +60,6 @@ function Nav() {
           </>
         ) : (
           <>
-            {/* Render when the user is not logged in */}
             <Link to="/login">
               <Button
                 variant="ghost"
