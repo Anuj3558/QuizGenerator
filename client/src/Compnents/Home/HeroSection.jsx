@@ -2,6 +2,8 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Button } from "./ui/Button";
 import { HeroIMG } from '../../assets';
+import GradientBorderButton from './ui/GradientBorderButton';
+
 
 function Hero() {
     return (
@@ -32,11 +34,12 @@ function Hero() {
                     initial={{ y: 20, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
                     transition={{ duration: 0.5, delay: 0.5 }}
+                    className="relative inline-block"
                 >
-                    <Link to="/signup">
-                        <Button className="bg-blue-600 hover:bg-blue-700 text-white text-lg px-8 py-4">
-                            Get Started for Free
-                        </Button>
+                    {/* Gradient border wrapper */}
+                    <div className="absolute inset-0 rounded-full border-4 border-transparent bg-clip-padding animate-gradient-border" />
+                    <Link to="/signup" className="relative z-10">
+                       <GradientBorderButton children={"Get Started"}/>
                     </Link>
                 </motion.div>
             </div>
@@ -48,12 +51,23 @@ function Hero() {
                 className="relative mb-12"
             >
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full filter blur-3xl opacity-30"></div>
-                <img
+                
+                {/* Add swing animation here */}
+                <motion.img
                     src={HeroIMG}
                     alt="AI Quiz Generation"
                     className="relative z-10"
                     width={400}
                     height={400}
+                    animate={{
+                        y: [0, -10, 0], // Move up and down
+                    }}
+                    transition={{
+                        duration: 1,
+                        ease: "easeInOut",
+                        repeat: Infinity, // Repeat infinitely
+                        repeatType: "loop", // Loop the animation
+                    }}
                 />
             </motion.div>
         </motion.main>
