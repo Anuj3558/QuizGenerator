@@ -1,8 +1,16 @@
-"use client"
+"use client";
 
 
 
 import { motion } from 'framer-motion'
+
+
+// Import Components
+import Nav from "./Home/Nav";
+import Hero from "./Home/HeroSection";
+import Features from "./Home/Features";
+import Testimonials from "./Home/Testimonials";
+import Footer from "./Home/Footer";
 
 import Nav from './Home/Nav'
 import Hero from './Home/HeroSection'
@@ -11,6 +19,7 @@ import Testimonials from './Home/Testimonials'
 import Footer from './Home/Footer'
 import HowItWorksSection from './Home/HowitWorks'
 import CallToAction from './Home/CallToAction'
+
 
 export default function LandingPage() {
   return (
@@ -25,6 +34,7 @@ export default function LandingPage() {
        
       </div>
 
+      {/* Floating Motion Elements */}
       <motion.div
         className="fixed top-20 left-10 w-20 h-20 bg-blue-500 rounded-full filter blur-3xl opacity-20"
         animate={{
@@ -50,12 +60,5 @@ export default function LandingPage() {
         }}
       />
     </div>
-  )
+  );
 }
-
-
-
-
-
-
-
