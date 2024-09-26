@@ -1,19 +1,19 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from 'react'
-import Link from 'next/link'
-import Image from 'next/image'
-import { motion } from 'framer-motion'
+import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 
-import Nav from './Home/Nav'
-import Hero from './Home/HeroSection'
-import Features from './Home/Features'
-import Testimonials from './Home/Testimonials'
-import Footer from './Home/Footer'
+// Import Components
+import Nav from "./Home/Nav";
+import Hero from "./Home/HeroSection";
+import Features from "./Home/Features";
+import Testimonials from "./Home/Testimonials";
+import Footer from "./Home/Footer";
 
 export default function LandingPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white overflow-hidden">
+      {/* Main container with components */}
       <div className="container mx-auto px-4 py-16 relative">
         <Nav />
         <Hero />
@@ -22,6 +22,7 @@ export default function LandingPage() {
         <Footer />
       </div>
 
+      {/* Floating Motion Elements */}
       <motion.div
         className="fixed top-20 left-10 w-20 h-20 bg-blue-500 rounded-full filter blur-3xl opacity-20"
         animate={{
@@ -47,12 +48,5 @@ export default function LandingPage() {
         }}
       />
     </div>
-  )
+  );
 }
-
-
-
-
-
-
-
