@@ -4,6 +4,7 @@
 
 import { motion } from 'framer-motion'
 
+
 // Import Components
 import Nav from "./Home/Nav";
 import Hero from "./Home/HeroSection";
@@ -11,15 +12,24 @@ import Features from "./Home/Features";
 import Testimonials from "./Home/Testimonials";
 import Footer from "./Home/Footer";
 
+import Nav from './Home/Nav'
+import Hero from './Home/HeroSection'
+import Features from './Home/Features'
+import Testimonials from './Home/Testimonials'
+import Footer from './Home/Footer'
+import HowItWorksSection from './Home/HowitWorks'
+
+
 export default function LandingPage() {
   return (
-    <div className="min-h-screen poppins-regular bg-gradient-to-br from-gray-900 to-black text-white overflow-hidden">
+    <div className="min-h-screen poppins-regular pt-7 bg-gradient-to-br from-gray-900 to-black text-white overflow-hidden">
       <div className="container mx-auto px-4 py-16 relative">
-        <Nav />
+       
         <Hero />
         <Features />
+        <HowItWorksSection />
         <Testimonials />
-        <Footer />
+       
       </div>
 
       {/* Floating Motion Elements */}
