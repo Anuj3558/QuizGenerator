@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
+
+
+import { motion } from 'framer-motion'
 
 // Import Components
 import Nav from "./Home/Nav";
@@ -12,8 +13,7 @@ import Footer from "./Home/Footer";
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white overflow-hidden">
-      {/* Main container with components */}
+    <div className="min-h-screen poppins-regular bg-gradient-to-br from-gray-900 to-black text-white overflow-hidden">
       <div className="container mx-auto px-4 py-16 relative">
         <Nav />
         <Hero />
