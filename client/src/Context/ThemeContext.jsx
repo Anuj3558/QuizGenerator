@@ -1,21 +1,26 @@
-import React, { createContext, useState, useEffect } from 'react';
+import { createContext, useState } from 'react';
 
 export const ThemeContext = createContext();
 
 export const ThemeProvider = ({ children }) => {
-  const [theme, setTheme] = useState("");
-
-  const [successMsg, setSuccessMsg] = useState("");
-  const [WarningMsg, setwarninigsg] = useState("");
-  const [errMsg, seterrMsg] = useState("");
-
-  useEffect(() => {
-    document.body.className = theme;
-  }, [theme]);
+  const [theme, setTheme] = useState('');
+  const [successMsg, setSuccessMsg] = useState('');
+  const [warningMsg, setWarningMsg] = useState('');
+  const [errMsg, setErrMsg] = useState('');
 
   return (
-    <ThemeContext.Provider value={{ theme,setTheme,successMsg, setSuccessMsg,WarningMsg, setwarninigsg,errMsg, seterrMsg
-      }}>
+    <ThemeContext.Provider
+      value={{
+        theme,
+        setTheme,
+        successMsg,
+        setSuccessMsg,
+        warningMsg,
+        setWarningMsg,
+        errMsg,
+        setErrMsg,
+      }}
+    >
       {children}
     </ThemeContext.Provider>
   );

@@ -30,7 +30,10 @@ if (!MONGOURL) {
 ConnectToMongoDb(MONGOURL);
 
 // Middleware
-app.use(cors()); // Enable CORS for all routes
+app.use(cors({
+    origin: 'http://localhost:3000', // or your React app's URL
+  }));
+  // Enable CORS for all routes
 app.use(cookieParser()); // Parse cookies
 app.use(bodyParser.json()); // Parse JSON bodies
 app.use(bodyParser.urlencoded({ extended: true })); // Parse URL-encoded bodies

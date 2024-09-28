@@ -1,6 +1,5 @@
 import mongoose from 'mongoose';
 
-
 const userSchema = new mongoose.Schema({
   uid: {
     type: String,
@@ -13,7 +12,6 @@ const userSchema = new mongoose.Schema({
   },
   profilePicUrl: {
     type: String,
-    default: 'default-profile-pic.jpg',
   },
   fullName: {
     type: String,
@@ -26,9 +24,12 @@ const userSchema = new mongoose.Schema({
   },
   phone: String,
   location: String,
+  status: {
+    type: String,
+    enum: ["Pending", "Completed"], // Corrected enum syntax
+    default: "Pending", // Set default to "Pending"
+  },
 });
-
-
 
 const User = mongoose.model('User', userSchema);
 
