@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ChevronRight, Mail, Lock } from 'lucide-react';
 import { FcGoogle } from 'react-icons/fc'; // Google icon from react-icons
-import { ErrorNotification, SuccessNotification } from '../ui/Notification Components ';
-
+import { ErrorNotification, SuccessNotification, WarningNotification } from '../ui/Notification Components ';
+import { ThemeContext } from '../../Context/ThemeContext';
 const Input = ({ icon: Icon, ...props }) => (
     
   <div className="relative">
@@ -32,14 +32,18 @@ const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
+  const { theme,setTheme} = useContext(ThemeContext);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log('Login attempt with:', { email, password });
     setTimeout(() => {
         setSuccessMsg("")
-    }, 3000);
+        setTheme("")
+    }, 2000);
+    setTheme("Successtr")
     setSuccessMsg(`Operation was successful!  ${email}`);
+    
     // Implement your login logic here
   };
   
@@ -59,8 +63,7 @@ const LoginPage = () => {
         transition={{ duration: 0.5 }}
         className="w-full max-w-md"
       >
-        {successMsg && <SuccessNotification message={successMsg} />}
-        {successMsg && <ErrorNotification message={successMsg} />}
+     
         <div className="bg-gray-800 shadow-lg rounded-lg overflow-hidden">
           <div className="p-8">
             <h2 className="text-3xl font-extrabold text-center mb-6">
