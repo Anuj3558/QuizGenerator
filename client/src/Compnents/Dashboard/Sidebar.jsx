@@ -1,47 +1,56 @@
-import React, { useState } from "react";
+import React from "react";
 import { Button } from "../Home/ui/Button.jsx";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, FileUp, NotebookPen, User, BarChart } from "lucide-react";
+import {
+  Menu,
+  X,
+  User,
+  BookOpen,
+  PlusCircle,
+  Users,
+  LogOut,
+} from "lucide-react";
 
-export default function Sidebar({ activeSection, setActiveSection }) {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-
-const sidebarItems = [
-  { name: "Profile", id: "profile", icon: <User className="h-4 w-4" /> },
-  {
-    name: "Create Quiz",
-    id: "create-quiz",
-    icon: <FileUp className="h-4 w-4" />,
-  },
-  {
-    name: "Quizzes",
-    id: "quizzes", // Change this to "quizzes"
-    icon: <BarChart className="h-4 w-4" />,
-  },
-  {
-    name: "Create Classroom",
-    id: "create-classroom",
-    icon: <NotebookPen className="h-4 w-4" />,
-  },
-];
-
+export default function Sidebar({
+  activeSection,
+  setActiveSection,
+  isSidebarOpen,
+  setIsSidebarOpen,
+  userType,
+}) {
+  // Sidebar items based on user type
+  const sidebarItems =
+    userType === "teacher"
+      ? [
+          { id: "profile", icon: User, label: "Profile" },
+          { id: "create-quiz", icon: PlusCircle, label: "Create Quiz" },
+          { id: "quizzes", icon: BookOpen, label: "Quizzes" },
+          { id: "classrooms", icon: Users, label: "Classrooms" },
+        ]
+      : [
+          { id: "profile", icon: User, label: "Profile" },
+          { id: "join-classroom", icon: Users, label: "Join Classroom" },
+        ];
 
   const SidebarButton = ({ item, onClick }) => (
     <Button
-      key={item.id}
       variant="ghost"
       className={`w-full justify-start text-left transition-all duration-300 ease-in-out 
-        ${activeSection === item.id ? "bg-gray-700" : ""}
-        hover:bg-gray-700 hover:scale-105 hover:shadow-lg hover:shadow-cyan-500/50
-        group relative overflow-hidden`}
+        ${activeSection === item.id ? "bg-gray-700" : ""} 
+        group relative overflow-hidden 
+        hover:scale-105 hover:bg-gray-700`}
       onClick={onClick}
     >
       <div className="flex items-center justify-start">
-        <div className="justify-start mr-2">{item.icon}</div>
-        {item.name}
+        <div className="justify-start mr-2">
+          {<item.icon className="h-4 w-4" />}
+        </div>
+        {item.label}
       </div>
-      <div className="absolute inset-0 bg-cyan-500 opacity-0 group-hover:opacity-20 transition-opacity duration-300" />
-      <div className="absolute left-0 top-0 h-full w-1 bg-cyan-500 transform -translate-x-full group-hover:translate-x-0 transition-transform duration-300" />
+
+      {/* Glowing Effect */}
+      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+      <div className="absolute left-0 top-0 h-full w-1 bg-purple-500 transform -translate-x-full group-hover:translate-x-0 transition-transform duration-300" />
     </Button>
   );
 
@@ -49,7 +58,9 @@ const sidebarItems = [
     <>
       {/* Static Sidebar for Large Screens */}
       <div className="hidden md:block w-64 bg-gray-800 h-full p-4 border-r border-gray-700">
-        <h2 className="text-2xl font-bold mb-4 text-left">AI Quiz Gen</h2>
+        <h2 className="text-2xl font-bold mb-4 text-left text-purple-500">
+          AI Quiz Gen
+        </h2>
         <nav className="space-y-4">
           {sidebarItems.map((item) => (
             <SidebarButton
@@ -59,6 +70,17 @@ const sidebarItems = [
             />
           ))}
         </nav>
+        <div className="absolute bottom-4 left-4">
+          <button
+            onClick={() => {
+              // Handle logout logic here
+            }}
+            className="flex items-center space-x-2 text-gray-400 hover:text-white"
+          >
+            <LogOut className="w-5 h-5" />
+            <span>Logout</span>
+          </button>
+        </div>
       </div>
 
       {/* Sidebar for Mobile/Tablet */}
@@ -73,7 +95,9 @@ const sidebarItems = [
           >
             <div className="p-4">
               <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl font-bold text-left">AI Quiz Gen</h2>
+                <h2 className="text-2xl font-bold text-left text-purple-500">
+                  AI Quiz Gen
+                </h2>
                 <Button
                   variant="ghost"
                   size="icon"
@@ -95,6 +119,17 @@ const sidebarItems = [
                   />
                 ))}
               </nav>
+              <div className="absolute bottom-4 left-4">
+                <button
+                  onClick={() => {
+                    // Handle logout logic here
+                  }}
+                  className="flex items-center space-x-2 text-gray-400 hover:text-white"
+                >
+                  <LogOut className="w-5 h-5" />
+                  <span>Logout</span>
+                </button>
+              </div>
             </div>
           </motion.div>
         )}
