@@ -4,7 +4,7 @@ import passport from 'passport';
 import dotenv from 'dotenv';
 import authRoutes from './routes/auth.js';
 
-dotenv.config("./.env");
+dotenv.config();
 
 
 const app = express();
@@ -17,7 +17,7 @@ mongoose.connect(process.env.MONGO_URL)
 app.use(passport.initialize());
 
 // Routes
-app.use('/auth', authRoutes);
+app.use('/api/v1/user', authRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
