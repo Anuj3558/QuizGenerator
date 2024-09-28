@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ChevronRight, User, Mail, Lock, Github } from 'lucide-react';
+import { ChevronRight, User, Mail, Lock } from 'lucide-react';
+import { FaGoogle } from "react-icons/fa";
+
 
 const Input = ({ icon: Icon, ...props }) => (
   <div className="relative">
@@ -36,8 +38,8 @@ const SignUpPage = () => {
     navigate('/login');
   };
 
-  const handleGithubSignUp = () => {
-    console.log('Sign up with GitHub');
+  const handleGoogleSignUp = () => {
+    console.log('Sign up with Google');
   };
 
   return (
@@ -85,9 +87,9 @@ const SignUpPage = () => {
               </Button>
             </form>
             <div className="mt-6">
-              <Button onClick={handleGithubSignUp} className="bg-gray-700 hover:bg-gray-600">
-                <Github className="inline-block mr-2" size={18} />
-                Sign up with GitHub
+              <Button onClick={handleGoogleSignUp} className="bg-gray-700 hover:bg-gray-600">
+             <FaGoogle  className="inline-block mr-2" size={18} />
+                Sign up with Google
               </Button>
             </div>
           </div>
