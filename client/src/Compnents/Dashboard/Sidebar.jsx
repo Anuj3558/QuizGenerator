@@ -29,7 +29,7 @@ export default function Sidebar({
         ]
       : [
           { id: "profile", icon: User, label: "Profile" },
-          { id: "join-classroom", icon: Users, label: "Join Classroom" },
+          { id: "classrooms", icon: Users, label: "Classrooms" },
         ];
 
   const SidebarButton = ({ item, onClick }) => (
@@ -57,10 +57,8 @@ export default function Sidebar({
   return (
     <>
       {/* Static Sidebar for Large Screens */}
-      <div className="hidden md:block w-64 bg-gray-800 h-full p-4 border-r border-gray-700">
-        <h2 className="text-2xl font-bold mb-4 text-left text-purple-500">
-          AI Quiz Gen
-        </h2>
+      <div className="hidden md:block w-64  bg-gray-800 h-full p-4 border-r border-gray-700">
+        
         <nav className="space-y-4">
           {sidebarItems.map((item) => (
             <SidebarButton

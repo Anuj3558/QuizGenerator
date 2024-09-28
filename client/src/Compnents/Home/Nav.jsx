@@ -1,99 +1,33 @@
-
-import { useState } from "react";
-import { motion } from "framer-motion";
-import { Button } from "./ui/Button";
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Button } from "./ui/Button"; // Adjust the path if necessary
 import { Link } from "react-router-dom";
-import { Truck } from "lucide-react";
+import { Menu, X } from "lucide-react";
 
-function Nav() {
-  // State to manage whether the user is logged in or not
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
-
-  // Function to simulate login/logout (this can later be replaced with actual logic)
-  const handleLogout = () => {
-    setIsLoggedIn(false); // Simulate user logging out
-  };
-
-  const handleLogin = () => {
-    setIsLoggedIn(true); // Simulate user logging in
-  };
-
-import React, { useState, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { Link } from 'react-router-dom'
-import { Button } from "../Home/ui/Button"
-import { Menu, X } from 'lucide-react'
-
-const Nav = () => {
-  const [isScrolled, setIsScrolled] = useState(false)
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+const Nav = ({ isLoggedIn=true, handleLogout, handleLogin }) => {
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20)
-    }
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
-
+      setIsScrolled(window.scrollY > 20);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   return (
     <motion.nav
       initial={{ y: -50, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.5 }}
-
-      className="flex justify-between items-center mb-16"
-    >
-      {/* Logo */}
-      <div className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-600">
-        AIQuizGen
-      </div>
-
-      {/* Conditional Navigation Links */}
-      <div className="space-x-4">
-        {isLoggedIn ? (
-          <>
-            {/* Render when the user is logged in */}
-            <Link to="/dashboard">
-              <Button
-                variant="ghost"
-                className="text-gray-300 hover:text-white"
-              >
-                Dashboard
-              </Button>
-            </Link>
-            <Link to="/about">
-              <Button
-                variant="ghost"
-                className="text-gray-300 hover:text-white"
-              >
-                About Us
-              </Button>
-            </Link>
-            <Button
-              onClick={handleLogout}
-              className="bg-red-600 hover:bg-red-700 text-white"
-            >
-              Logout
-            </Button>
-          </>
-        ) : (
-          <>
-            {/* Render when the user is not logged in */}
-            <Link to="/login">
-              <Button
-                variant="ghost"
-                className="text-gray-300 hover:text-white"
-                onClick={handleLogin}
-              >
-
-      className={`fixed w-full z-50 mt-3 rounded-3xl justify-center align-middle transition-all poppins-regular duration-300 ${
-        isScrolled ? 'bg-blur backdrop-blur-md shadow-lg' : 'bg-inherit'
+      className={`fixed w-full z-50 mt-3 rounded-3xl justify-center transition-all duration-300 ${
+        isScrolled ? "bg-blur backdrop-blur-md shadow-lg" : "bg-inherit"
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center py-4 md:justify-start md:space-x-10">
+          {/* Logo */}
           <div className="flex justify-start lg:w-0 lg:flex-1">
             <Link to="/">
               <span className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-600">
@@ -101,6 +35,7 @@ const Nav = () => {
               </span>
             </Link>
           </div>
+          {/* Mobile Menu Button */}
           <div className="-mr-2 -my-2 md:hidden">
             <Button
               variant="ghost"
@@ -114,41 +49,71 @@ const Nav = () => {
               )}
             </Button>
           </div>
+          {/* Navigation Links */}
           <div className="hidden md:flex items-center justify-end md:flex-1 lg:w-0 space-x-4">
-            <Link to="/login">
-              <Button variant="ghost" className="text-gray-300 hover:text-white">
-
-                Login
-              </Button>
-            </Link>
-            <Link to="/signup">
-              <Button className="bg-blue-600 hover:bg-blue-700 text-white">
-                Sign Up
-              </Button>
-            </Link>
-
-          </>
-        )}
-      </div>
-    </motion.nav>
-  );
-
+            {isLoggedIn ? (
+              <>
+                <Link to="/dashboard">
+                  <Button
+                    variant="ghost"
+                    className="text-gray-300 hover:text-white"
+                  >
+                    Dashboard
+                  </Button>
+                </Link>
+                <Link to="/about">
+                  <Button
+                    variant="ghost"
+                    className="text-gray-300 hover:text-white"
+                  >
+                    About Us
+                  </Button>
+                </Link>
+                <Button
+                  onClick={handleLogout}
+                  className="bg-red-600 hover:bg-red-700 text-white"
+                >
+                  Logout
+                </Button>
+              </>
+            ) : (
+              <>
+                <Link to="/login">
+                  <Button
+                    variant="ghost"
+                    className="text-gray-300 hover:text-white"
+                    onClick={handleLogin}
+                  >
+                    Login
+                  </Button>
+                </Link>
+                <Link to="/signup">
+                  <Button className="bg-blue-600 hover:bg-blue-700 text-white">
+                    Sign Up
+                  </Button>
+                </Link>
+              </>
+            )}
           </div>
         </div>
       </div>
 
+      {/* Mobile Menu */}
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div
             initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
+            animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.3 }}
             className="md:hidden"
           >
             <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
               <Link to="/login">
-                <Button variant="ghost" className="w-full text-left text-gray-300 hover:text-white">
+                <Button
+                  variant="ghost"
+                  className="w-full text-left text-gray-300 hover:text-white"
+                >
                   Login
                 </Button>
               </Link>
@@ -162,8 +127,7 @@ const Nav = () => {
         )}
       </AnimatePresence>
     </motion.nav>
-  )
+  );
+};
 
-}
-
-export default Nav
+export default Nav;

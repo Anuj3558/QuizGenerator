@@ -19,16 +19,14 @@ export default function Dashboard({ userType = "student" }) {
       case "quizzes":
         return userType === "teacher" ? <Quizzes /> : null;
       case "classrooms":
-        return userType === "teacher" ? <Classrooms /> : null;
-      case "join-classroom":
-        return userType === "student" ? <JoinClassroom /> : null;
+        return <Classrooms userType={userType} />; // Added return statement here
       default:
         return <ProfilePage userType={userType} />;
     }
   };
 
   return (
-    <div className="flex h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 text-white overflow-hidden">
+    <div className="flex h-screen bg-gradient-to-br pt-20 from-gray-900 via-blue-900 to-purple-900 text-white overflow-hidden">
       {/* Sidebar */}
       <Sidebar
         activeSection={activeSection}
@@ -58,4 +56,3 @@ export default function Dashboard({ userType = "student" }) {
     </div>
   );
 }
-  

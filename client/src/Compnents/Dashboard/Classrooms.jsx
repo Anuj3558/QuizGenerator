@@ -10,9 +10,10 @@ import {
   GraduationCap,
 } from "lucide-react";
 
-export default function Classrooms() {
+export default function Classrooms({ userType }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [classroomName, setClassroomName] = useState("");
+  const [classroomCode, setClassroomCode] = useState("");
   const [classrooms, setClassrooms] = useState([]);
   const [selectedClassroom, setSelectedClassroom] = useState(null);
 
@@ -28,19 +29,35 @@ export default function Classrooms() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const generatedCode = generateCode();
-    const newClassroom = {
-      name: classroomName,
-      code: generatedCode,
-      content: {
-        Videos: [],
-        Lectures: [],
-        Notes: [],
-        Syllabus: [],
-      },
-    };
-    setClassrooms((prevClassrooms) => [...prevClassrooms, newClassroom]);
-    setClassroomName("");
+    if (userType === "teacher") {
+      const generatedCode = generateCode();
+      const newClassroom = {
+        name: classroomName,
+        code: generatedCode,
+        content: {
+          Videos: [],
+          Announcements: [],
+          Notes: [],
+          Syllabus: [],
+        },
+      };
+      setClassrooms((prevClassrooms) => [...prevClassrooms, newClassroom]);
+      setClassroomName("");
+    } else {
+      // For students, we'll just add the classroom with the given code
+      const newClassroom = {
+        name: `Classroom ${classrooms.length + 1}`, // Placeholder name
+        code: classroomCode,
+        content: {
+          Videos: [],
+          Announcements: [],
+          Notes: [],
+          Syllabus: [],
+        },
+      };
+      setClassrooms((prevClassrooms) => [...prevClassrooms, newClassroom]);
+      setClassroomCode("");
+    }
     setIsModalOpen(false);
   };
 
@@ -60,7 +77,7 @@ export default function Classrooms() {
           className="border border-purple-500 hover:scale-105 hover:bg-purple-500/50 transition-all duration-300"
           onClick={() => setIsModalOpen(true)}
         >
-          Create Classroom
+          {userType === "teacher" ? "Create Classroom" : "Join Classroom"}
         </Button>
       )}
 
@@ -79,18 +96,28 @@ export default function Classrooms() {
               exit={{ scale: 0.9 }}
             >
               <h2 className="text-2xl font-bold mb-4 text-center">
-                Create a Classroom
+                {userType === "teacher"
+                  ? "Create a Classroom"
+                  : "Join a Classroom"}
               </h2>
               <form onSubmit={handleSubmit}>
                 <div className="mb-4">
                   <label className="block text-sm font-medium mb-2">
-                    Classroom Name
+                    {userType === "teacher"
+                      ? "Classroom Name"
+                      : "Classroom Code"}
                   </label>
                   <input
                     type="text"
                     className="w-full p-2 bg-gray-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
-                    value={classroomName}
-                    onChange={(e) => setClassroomName(e.target.value)}
+                    value={
+                      userType === "teacher" ? classroomName : classroomCode
+                    }
+                    onChange={(e) =>
+                      userType === "teacher"
+                        ? setClassroomName(e.target.value)
+                        : setClassroomCode(e.target.value)
+                    }
                     required
                   />
                 </div>
@@ -99,7 +126,7 @@ export default function Classrooms() {
                     type="submit"
                     className="bg-purple-500 hover:bg-purple-600 transition-colors duration-300"
                   >
-                    Create
+                    {userType === "teacher" ? "Create" : "Join"}
                   </Button>
                   <Button
                     className="bg-gray-500 hover:bg-gray-600 transition-colors duration-300"
@@ -119,6 +146,7 @@ export default function Classrooms() {
           classroom={selectedClassroom}
           setSelectedClassroom={setSelectedClassroom}
           updateClassroom={updateClassroom}
+          userType={userType}
         />
       ) : (
         <motion.div
@@ -146,7 +174,12 @@ export default function Classrooms() {
   );
 }
 
-function ClassroomDetail({ classroom, setSelectedClassroom, updateClassroom }) {
+function ClassroomDetail({
+  classroom,
+  setSelectedClassroom,
+  updateClassroom,
+  userType,
+}) {
   const [activeSection, setActiveSection] = useState("Videos");
   const [isAddContentModalOpen, setIsAddContentModalOpen] = useState(false);
   const [newContent, setNewContent] = useState("");
@@ -154,7 +187,7 @@ function ClassroomDetail({ classroom, setSelectedClassroom, updateClassroom }) {
 
   const sections = [
     { name: "Videos", icon: Video, acceptTypes: "video/*" },
-    { name: "Lectures", icon: BookOpen, acceptTypes: null },
+    { name: "Announcements", icon: BookOpen, acceptTypes: null },
     { name: "Notes", icon: FileText, acceptTypes: ".pdf,.doc,.docx,.txt" },
     {
       name: "Syllabus",
@@ -164,16 +197,16 @@ function ClassroomDetail({ classroom, setSelectedClassroom, updateClassroom }) {
   ];
 
   const handleAddContent = () => {
-    if (activeSection) {
+    if (activeSection && userType === "teacher") {
       let contentToAdd;
-      if (file && activeSection !== "Lectures") {
+      if (file && activeSection !== "Announcements") {
         contentToAdd = {
           type: activeSection.toLowerCase(),
           file: URL.createObjectURL(file),
           name: file.name,
         };
         setFile(null);
-      } else if (newContent.trim() !== "" && activeSection === "Lectures") {
+      } else if (newContent.trim() !== "" && activeSection === "Announcements") {
         contentToAdd = {
           type: "text",
           content: newContent,
@@ -252,52 +285,33 @@ function ClassroomDetail({ classroom, setSelectedClassroom, updateClassroom }) {
             }`}
             onClick={() => setActiveSection(section.name)}
             whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
           >
-            <section.icon className="w-8 h-8 mb-2" />
+            <section.icon className="h-8 w-8 mb-2" />
             <span className="text-sm">{section.name}</span>
           </motion.button>
         ))}
       </div>
 
-      <div className="mb-6">
+      <div className="mb-8">
+        <h3 className="text-2xl font-semibold mb-4">Contents</h3>
+        {classroom.content[activeSection]?.map((content, index) => (
+          <div key={index} className="mb-4">
+            {renderContent(content)}
+          </div>
+        ))}
+      </div>
+
+      {userType === "teacher" && (
         <Button
           className="bg-purple-500 hover:bg-purple-600 transition-colors duration-300"
           onClick={() => setIsAddContentModalOpen(true)}
         >
-          Add {activeSection} Content
+          Add Content
         </Button>
-      </div>
-
-      <div className="space-y-4">
-        {classroom.content[activeSection]?.length > 0 ? (
-          classroom.content[activeSection].map((content, index) => (
-            <motion.div
-              key={index}
-              className="p-4 bg-gray-900 rounded-lg shadow-md"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-            >
-              {renderContent(content)}
-            </motion.div>
-          ))
-        ) : (
-          <p className="text-gray-400">No content available.</p>
-        )}
-      </div>
-
-      <div className="mt-8">
-        <Button
-          className="border border-gray-500 hover:bg-gray-700 transition-all duration-300"
-          onClick={() => setSelectedClassroom(null)}
-        >
-          <ArrowLeft className="mr-2 w-5 h-5" />
-          Back to Classrooms
-        </Button>
-      </div>
+      )}
 
       <AnimatePresence>
-        {isAddContentModalOpen && (
+        {isAddContentModalOpen && userType === "teacher" && (
           <motion.div
             className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50"
             initial={{ opacity: 0 }}
@@ -311,36 +325,31 @@ function ClassroomDetail({ classroom, setSelectedClassroom, updateClassroom }) {
               exit={{ scale: 0.9 }}
             >
               <h2 className="text-2xl font-bold mb-4 text-center">
-                Add {activeSection} Content
+                Add Content to {activeSection}
               </h2>
-              {activeSection === "Lectures" ? (
-                <div className="mb-4">
-                  <label className="block text-sm font-medium mb-2">
-                    Lecture Content
-                  </label>
+              <div className="mb-4">
+                {activeSection === "Announcements" ? (
                   <textarea
                     className="w-full p-2 bg-gray-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    rows="4"
                     value={newContent}
                     onChange={(e) => setNewContent(e.target.value)}
-                    rows="4"
+                    placeholder="Enter lecture details..."
+                    required
                   />
-                </div>
-              ) : (
-                <div className="mb-4">
-                  <label className="block text-sm font-medium mb-2">
-                    Upload {activeSection} File
-                  </label>
+                ) : (
                   <input
                     type="file"
-                    className="w-full p-2 bg-gray-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
                     accept={
                       sections.find((s) => s.name === activeSection)
                         ?.acceptTypes
                     }
+                    className="w-full p-2 bg-gray-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
                     onChange={(e) => setFile(e.target.files[0])}
+                    required
                   />
-                </div>
-              )}
+                )}
+              </div>
               <div className="flex justify-between">
                 <Button
                   className="bg-purple-500 hover:bg-purple-600 transition-colors duration-300"
@@ -359,6 +368,14 @@ function ClassroomDetail({ classroom, setSelectedClassroom, updateClassroom }) {
           </motion.div>
         )}
       </AnimatePresence>
+
+      <Button
+        className="mt-6 text-purple-400 hover:text-purple-300"
+        onClick={() => setSelectedClassroom(null)}
+      >
+        <ArrowLeft className="w-4 h-4 inline-block mr-1" />
+        Back to Classrooms
+      </Button>
     </motion.div>
   );
 }
