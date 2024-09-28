@@ -1,17 +1,14 @@
-
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "./ui/Button"; // Adjust the path if necessary
 import { Link } from "react-router-dom";
 import { Menu, X } from "lucide-react";
-import { useState } from "react";
-import { motion } from "framer-motion";
-import { Button } from "./ui/Button";
-import { Link } from "react-router-dom";
-import { Menu } from "lucide-react"; // Menu icon for mobile
-const Nav = ({ isLoggedIn=true, handleLogout, handleLogin }) => {
+
+// Menu icon for mobile
+const Nav = ({ isLoggedIn: initialLoggedIn = true }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(initialLoggedIn);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -21,12 +18,6 @@ const Nav = ({ isLoggedIn=true, handleLogout, handleLogin }) => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-
-
-function Nav() {
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
-  const [isMenuOpen, setIsMenuOpen] = useState(false); // For mobile menu toggle
-
   const handleLogout = () => {
     setIsLoggedIn(false);
   };
@@ -35,17 +26,11 @@ function Nav() {
     setIsLoggedIn(true);
   };
 
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen); // Toggle mobile menu
-  };
-
-
   return (
     <motion.nav
       initial={{ y: -50, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.5 }}
-
       className={`fixed w-full z-50 mt-3 rounded-3xl justify-center transition-all duration-300 ${
         isScrolled ? "bg-blur backdrop-blur-md shadow-lg" : "bg-inherit"
       }`}
@@ -79,18 +64,12 @@ function Nav() {
             {isLoggedIn ? (
               <>
                 <Link to="/dashboard">
-                  <Button
-                    variant="ghost"
-                    className="text-gray-300 hover:text-white"
-                  >
+                  <Button variant="ghost" className="text-gray-300 hover:text-white">
                     Dashboard
                   </Button>
                 </Link>
                 <Link to="/about">
-                  <Button
-                    variant="ghost"
-                    className="text-gray-300 hover:text-white"
-                  >
+                  <Button variant="ghost" className="text-gray-300 hover:text-white">
                     About Us
                   </Button>
                 </Link>
@@ -134,19 +113,39 @@ function Nav() {
             className="md:hidden"
           >
             <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-              <Link to="/login">
-                <Button
-                  variant="ghost"
-                  className="w-full text-left text-gray-300 hover:text-white"
-                >
-                  Login
-                </Button>
-              </Link>
-              <Link to="/signup">
-                <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">
-                  Sign Up
-                </Button>
-              </Link>
+              {isLoggedIn ? (
+                <>
+                  <Link to="/dashboard">
+                    <Button className="w-full text-left text-gray-300 hover:text-white">
+                      Dashboard
+                    </Button>
+                  </Link>
+                  <Link to="/about">
+                    <Button className="w-full text-left text-gray-300 hover:text-white">
+                      About Us
+                    </Button>
+                  </Link>
+                  <Button
+                    onClick={handleLogout}
+                    className="w-full text-left bg-red-600 hover:bg-red-700 text-white"
+                  >
+                    Logout
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Link to="/login">
+                    <Button className="w-full text-left text-gray-300 hover:text-white">
+                      Login
+                    </Button>
+                  </Link>
+                  <Link to="/signup">
+                    <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">
+                      Sign Up
+                    </Button>
+                  </Link>
+                </>
+              )}
             </div>
           </motion.div>
         )}
@@ -154,62 +153,5 @@ function Nav() {
     </motion.nav>
   );
 };
-
-      className="flex p-7 justify-between items-center backdrop-blur fixed w-full z-10"
-    >
-      {/* Logo */}
-     <Link to="/"> <div className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-600">
-        AIQuizGen
-      </div></Link>
-
-      {/* Hamburger icon for mobile */}
-      <div className="lg:hidden">
-        <Menu onClick={toggleMenu} className="text-gray-300 cursor-pointer" />
-      </div>
-
-      {/* Conditional Navigation Links (Desktop View) */}
-      <div className={`space-x-4 ${isMenuOpen ? "block" : "hidden"} lg:flex`}>
-        {isLoggedIn ? (
-          <>
-            <Link to="/dashboard">
-              <Button variant="ghost" className="text-gray-300 hover:text-white">
-                Dashboard
-              </Button>
-            </Link>
-            <Link to="/about">
-              <Button variant="ghost" className="text-gray-300 hover:text-white">
-                About Us
-              </Button>
-            </Link>
-            <Button
-              onClick={handleLogout}
-              className="bg-red-600 hover:bg-red-700 text-white"
-            >
-              Logout
-            </Button>
-          </>
-        ) : (
-          <>
-            <Link to="/login">
-              <Button
-                variant="ghost"
-                className="text-gray-300 hover:text-white"
-                onClick={handleLogin}
-              >
-                Login
-              </Button>
-            </Link>
-            <Link to="/signup">
-              <Button className="bg-blue-600 hover:bg-blue-700 text-white">
-                Sign Up
-              </Button>
-            </Link>
-          </>
-        )}
-      </div>
-    </motion.nav>
-  );
-}
-
 
 export default Nav;

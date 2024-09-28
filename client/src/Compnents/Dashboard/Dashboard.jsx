@@ -27,7 +27,7 @@ export default function Dashboard({ userType = "student" }) {
 
   return (
 
-    <div className="flex h-screen pt-24 bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 text-white overflow-hidden">
+    <div className="flex h-screen pt-24 bg-gradient-to-br from-gray-900  to-black text-white overflow-hidden">
 
       {/* Sidebar */}
       <Sidebar

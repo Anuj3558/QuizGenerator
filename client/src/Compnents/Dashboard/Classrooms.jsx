@@ -71,7 +71,7 @@ export default function Classrooms({ userType }) {
   };
 
   return (
-    <div className="relative min-h-screen p-6 bg-gradient-to-br from-gray-900 rounded-xl to-purple-900 text-white">
+    <div className="relative min-h-screen p-6 bg-gradient-to-br from-gray-900 rounded-xl to-black text-white">
       {!selectedClassroom && (
         <Button
           className="border border-purple-500 hover:scale-105 hover:bg-purple-500/50 transition-all duration-300"

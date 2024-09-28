@@ -3,14 +3,14 @@
 
 
 import { motion } from 'framer-motion'
+import Nav from "./Home/Nav";
+import Hero from "./Home/HeroSection";
+import Features from "./Home/Features";
+import Testimonials from "./Home/Testimonials";
+import Footer from "./Home/Footer";
 
 
-// Import Components
-// import Nav from "./Home/Nav";
-// import Hero from "./Home/HeroSection";
-// import Features from "./Home/Features";
-// import Testimonials from "./Home/Testimonials";
-// import Footer from "./Home/Footer";
+
 
 
 
@@ -20,7 +20,7 @@ import CallToAction from './Home/CallToAction'
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen poppins-regular pt-7 bg-gradient-to-br from-gray-900 to-black text-white overflow-hidden">
+    <div className="min-h-screen poppins-regular pt-7 bg-gradient-to-br from-blue-950 to-black text-white overflow-hidden">
       <div className="container mx-auto px-4 py-16 relative">
        
         <Hero />
