@@ -1,12 +1,10 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ChevronRight, Mail, Lock } from 'lucide-react';
-import { FcGoogle } from 'react-icons/fc'; // Google icon from react-icons
-import { ErrorNotification, SuccessNotification, WarningNotification } from '../ui/Notification Components ';
-import { ThemeContext } from '../../Context/ThemeContext';
+import { ChevronRight, Mail, Lock} from 'lucide-react';
+import { FaGoogle } from "react-icons/fa";
+
 const Input = ({ icon: Icon, ...props }) => (
-    
   <div className="relative">
     <Icon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-blue-400" size={18} />
     <input
@@ -28,44 +26,29 @@ const Button = ({ children, className, ...props }) => (
 );
 
 const LoginPage = () => {
-   
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
-  const { theme,setTheme,successMsg, setSuccessMsg,WarningMsg, setwarninigsg,errMsg, seterrMsg} = useContext(ThemeContext);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log('Login attempt with:', { email, password });
-    setTimeout(() => {
-        setSuccessMsg("")
-        setTheme("")
-        setwarninigsg("")
-    }, 2000);
-    setTheme("Warningtr")
-    setwarninigsg("Please Enter all deatils")
-    setSuccessMsg(`Operation was successful!  ${email}`);
-    
     // Implement your login logic here
   };
-  
+
   const handleGoogleLogin = () => {
     console.log('Login with Google');
-    
-
-    // Implement Google login logic here, such as using Firebase, Google OAuth API, etc.
+    // Implement GitHub login logic here
   };
 
   return (
     <div className="min-h-screen bg-gray-900 text-white flex items-center justify-center p-4">
-          
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
         className="w-full max-w-md"
       >
-     
         <div className="bg-gray-800 shadow-lg rounded-lg overflow-hidden">
           <div className="p-8">
             <h2 className="text-3xl font-extrabold text-center mb-6">
@@ -105,7 +88,7 @@ const LoginPage = () => {
             </form>
             <div className="mt-6">
               <Button onClick={handleGoogleLogin} className="bg-gray-700 hover:bg-gray-600">
-                <FcGoogle className="inline-block mr-2" size={18} />
+                <FaGoogle  className="inline-block mr-2" size={18} />
                 Log in with Google
               </Button>
             </div>
@@ -120,9 +103,7 @@ const LoginPage = () => {
           </div>
         </div>
       </motion.div>
-      
     </div>
-  
   );
 };
 
