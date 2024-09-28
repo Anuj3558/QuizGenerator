@@ -2,37 +2,40 @@ import React, { useState } from "react";
 import Sidebar from "./Sidebar";
 import ProfilePage from "./ProfilePage";
 import CreateQuiz from "./CreateQuiz";
-
-import CreateClassroom from "./CreateClassroom";
 import Quizzes from "./Quizzes";
+import Classrooms from "./Classrooms";
+import JoinClassroom from "./JoinClassroom";
 
-export default function Dashboard() {
+export default function Dashboard({ userType = "student" }) {
   const [activeSection, setActiveSection] = useState("profile");
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-const renderSection = () => {
-  switch (activeSection) {
-    case "profile":
-      return <ProfilePage />;
-    case "create-quiz":
-      return <CreateQuiz />;
-    case "quizzes": // Ensure this matches the sidebar ID
-      return <Quizzes />;
-    case "create-classroom":
-      return <CreateClassroom />;
-    default:
-      return <ProfilePage />;
-  }
-};
+  const renderSection = () => {
+    switch (activeSection) {
+      case "profile":
+        return <ProfilePage userType={userType} />;
+      case "create-quiz":
+        return userType === "teacher" ? <CreateQuiz /> : null;
+      case "quizzes":
+        return userType === "teacher" ? <Quizzes /> : null;
+      case "classrooms":
+        return <Classrooms userType={userType} />; // Added return statement here
+      default:
+        return <ProfilePage userType={userType} />;
+    }
+  };
 
   return (
+
     <div className="flex h-screen pt-24 bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 text-white overflow-hidden">
+
       {/* Sidebar */}
       <Sidebar
         activeSection={activeSection}
         setActiveSection={setActiveSection}
         isSidebarOpen={isSidebarOpen}
         setIsSidebarOpen={setIsSidebarOpen}
+        userType={userType} // Pass userType to the sidebar
       />
 
       {/* Main Content */}
