@@ -104,7 +104,7 @@ const loginUser = async (req, res) => {
 // Middleware to verify JWT
 const verifyToken = (req, res, next) => {
     const token = req.headers['authorization']?.split(' ')[1]; // Assuming "Bearer TOKEN"
-
+     console.log()
     if (!token) {
         return res.status(403).json({ message: 'No token provided.' });
     }
@@ -113,6 +113,7 @@ const verifyToken = (req, res, next) => {
         if (err) {
             return res.status(401).json({ message: 'Unauthorized!' });
         }
+        console.log(token)
         req.userId = decoded.id; // Store user ID in request
         next();
     });

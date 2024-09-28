@@ -17,6 +17,7 @@ import UserTypeSelection from "./Compnents/Auth/UserTypeSelection.jsx";
 import Nav from "./Compnents/Nav.jsx";
 import Footer from "./Compnents/Footer.jsx";
 import { useAuth } from "./Context/AuthContext.js";
+import StudentDataForm from "./Compnents/Auth/StudentDataForm.jsx";
 
 // import Login from "./Compnents";
 
@@ -34,6 +35,7 @@ function App() {
       <Route path="/about" element={<AboutUs />} />
       <Route path="/quiz-analysis" element={<QuizAnalytics />} />
       <Route path="/select-role" element={<UserTypeSelection />} />
+      <Route path="/complete-profile" element={<StudentDataForm />} />
     </Routes>
     <Footer />
     {/* Notifications */}

@@ -1,12 +1,15 @@
 'use client'
-import React from 'react'
-import { motion } from 'framer-motion'
-import { GraduationCap, BookOpen, ChevronRight } from 'lucide-react'
-import axios from 'axios'; // Import axios for making HTTP requests
-import { useNavigate } from 'react-router-dom'; // Import useNavigate for navigation
+import React from 'react';
+import { motion } from 'framer-motion';
+import { GraduationCap, BookOpen, ChevronRight } from 'lucide-react';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import Cookie from "js-cookie";
+import { useAuth } from '../../Context/AuthContext';
 
 export default function UserTypeSelection() {
-  const navigate = useNavigate(); // Initialize navigate
+  const navigate = useNavigate();
+  const {user} = useAuth();
   const userTypes = [
     {
       type: 'Teacher',
@@ -24,13 +27,18 @@ export default function UserTypeSelection() {
 
   const handleUserTypeSelection = async (userType) => {
     try {
-      // Make a POST request to your backend with the selected user type
-      await axios.post(`${process.env.REACT_APP_BACKEND_URL}/completeprofile`, {
-        userType,
-      });
+      const token = Cookie.get("_id");
+      console.log(token);
 
+      // Make a POST request to your backend with the selected user type
+      await axios.post(`${process.env.REACT_APP_BACKEND_URL}/user/setUserType`, {
+        userType,
+      }, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+     
       // Navigate to the complete profile page after the request
-      navigate('/complete-profile');
+      navigate(`/`);
     } catch (error) {
       console.error('Error sending user type:', error);
       // Optionally handle error state here
@@ -65,7 +73,7 @@ export default function UserTypeSelection() {
           >
             <button
               className={`w-full h-64 bg-gray-800 rounded-2xl p-6 flex flex-col items-center justify-center text-center transition-transform transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 focus:ring-${userType.gradient.split('-')[1]} group`}
-              onClick={() => handleUserTypeSelection(userType.type)} // Call the function here
+              onClick={() => handleUserTypeSelection(userType.type)} 
               aria-label={`Select ${userType.type} role`}
             >
               <div className={`mb-4 p-3 rounded-full bg-gradient-to-br ${userType.gradient}`}>

@@ -25,6 +25,7 @@ export const AuthProvider = ({ children }) => {
           headers: { Authorization: `Bearer ${token}` },
         });
         setUser(response.data);
+        console.log(response.data)
         console.log(user)
       } catch (error) {
         console.error('Authentication check failed:', error);

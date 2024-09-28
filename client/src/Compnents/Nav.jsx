@@ -4,8 +4,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import { Button } from "../Compnents/Home/ui/Button";
 import { useAuth } from "../Context/AuthContext";
- // Update the path to your profile image
-import Cookie from "js-cookie"
+import Cookie from "js-cookie";
+
 const Nav = ({ isLoggedIn: initialLoggedIn = true }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -15,13 +15,18 @@ const Nav = ({ isLoggedIn: initialLoggedIn = true }) => {
 
   useEffect(() => {
     if (!loading) {
+      console.log(user)
       if (user) {
         if (user.status === "Pending") {
           navigate("/select-role");
         }
-      } 
+        setIsLoggedIn(true); // Update logged-in state
+      } else {
+        setIsLoggedIn(false); // Update logged-out state
+      }
     }
-  }, [user, loading, navigate,Cookie.get("_id")]);
+  }, [user, loading, navigate]);
+
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
@@ -31,11 +36,14 @@ const Nav = ({ isLoggedIn: initialLoggedIn = true }) => {
   }, []);
 
   const handleLogout = () => {
-    setIsLoggedIn(false);
+    Cookie.remove("_id");
+    // Optionally, redirect to login or home after logout
+    navigate("/login");
   };
 
   const handleLogin = () => {
-    setIsLoggedIn(true);
+    
+    navigate("/login");
   };
 
   return (
@@ -63,6 +71,7 @@ const Nav = ({ isLoggedIn: initialLoggedIn = true }) => {
               variant="ghost"
               className="text-gray-300 hover:text-white"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              aria-expanded={isMobileMenuOpen}
             >
               {isMobileMenuOpen ? (
                 <X className="h-6 w-6" aria-hidden="true" />
@@ -86,7 +95,7 @@ const Nav = ({ isLoggedIn: initialLoggedIn = true }) => {
                   </Button>
                 </Link>
                 <img 
-                  src={"profileImage"} 
+                  src={user?.profilePicUrl  || " "} // Update this to the correct user profile image
                   alt="Profile" 
                   className="w-8 h-8 rounded-full border border-gray-600" 
                 />

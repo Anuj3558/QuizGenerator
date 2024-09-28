@@ -24,6 +24,9 @@ export default function LandingPage() {
         if (user.status === "Pending") {
           navigate("/select-role");
         }
+        else if(user.status === "Partial"){
+          navigate(`/complete-profile`)
+        }
       }
       else{
         navigate("/")

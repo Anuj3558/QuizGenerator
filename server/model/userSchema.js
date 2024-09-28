@@ -1,3 +1,4 @@
+// userSchema.js
 import mongoose from 'mongoose';
 
 const userSchema = new mongoose.Schema({
@@ -24,10 +25,14 @@ const userSchema = new mongoose.Schema({
   },
   phone: String,
   location: String,
+  userType: {
+    type: String,
+    enum: ["Teacher", "Student"],
+  },
   status: {
     type: String,
-    enum: ["Pending", "Completed"], // Corrected enum syntax
-    default: "Pending", // Set default to "Pending"
+    enum: ["Pending", "Completed", "Partial"],
+    default: "Pending",
   },
 });
 

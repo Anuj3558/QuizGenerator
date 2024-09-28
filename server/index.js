@@ -6,6 +6,8 @@ import cors from 'cors';
 import ConnectToMongoDb from './connection.js';
 import AuthRouter from './Router/AuthRouter.js';
 import dotenv from 'dotenv'; // Load environment variables
+import UserRouter from './Router/UserRouter.js';
+import { verifyToken } from './controller/AuthController.js';
 
 // Load environment variables
 dotenv.config(); // Use dotenv to load `.env` file
@@ -31,7 +33,7 @@ ConnectToMongoDb(MONGOURL);
 
 // Middleware
 app.use(cors({
-    origin: 'http://localhost:3000', // or your React app's URL
+    origin: 'http://localhost:3000'||"https://quiz-generator-blond.vercel.app" // or your React app's URL
   }));
   // Enable CORS for all routes
 app.use(cookieParser()); // Parse cookies
@@ -39,8 +41,9 @@ app.use(bodyParser.json()); // Parse JSON bodies
 app.use(bodyParser.urlencoded({ extended: true })); // Parse URL-encoded bodies
 
 // Define routes
-app.use("/auth", AuthRouter); // Routes related to authentication
-
+app.use("/auth", AuthRouter);
+app.use("/user",verifyToken)// Routes related to authentication
+app.use("/user",UserRouter);
 // Start server
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
