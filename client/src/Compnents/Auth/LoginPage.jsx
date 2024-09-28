@@ -28,11 +28,11 @@ const Button = ({ children, className, ...props }) => (
 );
 
 const LoginPage = () => {
-    const [successMsg, setSuccessMsg] = useState("");
+   
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
-  const { theme,setTheme} = useContext(ThemeContext);
+  const { theme,setTheme,successMsg, setSuccessMsg,WarningMsg, setwarninigsg,errMsg, seterrMsg} = useContext(ThemeContext);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -40,8 +40,10 @@ const LoginPage = () => {
     setTimeout(() => {
         setSuccessMsg("")
         setTheme("")
+        setwarninigsg("")
     }, 2000);
-    setTheme("Successtr")
+    setTheme("Warningtr")
+    setwarninigsg("Please Enter all deatils")
     setSuccessMsg(`Operation was successful!  ${email}`);
     
     // Implement your login logic here
