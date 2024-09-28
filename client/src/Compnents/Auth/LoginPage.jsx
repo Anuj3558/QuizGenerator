@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ChevronRight, Mail, Lock } from 'lucide-react';
 import { FaGoogle } from "react-icons/fa";
@@ -36,7 +36,7 @@ const LoginPage = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
   const { setSuccessMsg, setErrMsg, setTheme } = useContext(ThemeContext);
-
+  const Navigate = useNavigate();
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrorMessage('');
@@ -51,7 +51,7 @@ const LoginPage = () => {
       setSuccessMsg("Login successful!");
       setTheme("success");
       localStorage.setItem('token', response.data.token);
-      navigate('/dashboard');
+      
 
     } catch (error) {
       console.error('Error during login:', error.response?.data || error.message);
@@ -81,9 +81,7 @@ const LoginPage = () => {
 
       setSuccessMsg("Goggle signup success!");
       setTheme("success");
-      setTimeout(() => {
-        navigate('/dashboard');
-      }, 500);
+      Navigate("/")
 
     } catch (error) {
       console.error('Error during Google sign-in:', error.message);

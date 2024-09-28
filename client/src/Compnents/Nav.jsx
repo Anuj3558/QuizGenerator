@@ -1,15 +1,27 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Button } from "./ui/Button"; // Adjust the path if necessary
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Menu, X } from "lucide-react";
-
-// Menu icon for mobile
+import { Button } from "../Compnents/Home/ui/Button";
+import { useAuth } from "../Context/AuthContext";
+ // Update the path to your profile image
+import Cookie from "js-cookie"
 const Nav = ({ isLoggedIn: initialLoggedIn = true }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(initialLoggedIn);
+  const { user, loading } = useAuth();
+  const navigate = useNavigate();
 
+  useEffect(() => {
+    if (!loading) {
+      if (user) {
+        if (user.status === "Pending") {
+          navigate("/select-role");
+        }
+      } 
+    }
+  }, [user, loading, navigate,Cookie.get("_id")]);
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
@@ -73,6 +85,11 @@ const Nav = ({ isLoggedIn: initialLoggedIn = true }) => {
                     About Us
                   </Button>
                 </Link>
+                <img 
+                  src={"profileImage"} 
+                  alt="Profile" 
+                  className="w-8 h-8 rounded-full border border-gray-600" 
+                />
                 <Button
                   onClick={handleLogout}
                   className="bg-red-600 hover:bg-red-700 text-white"

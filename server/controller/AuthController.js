@@ -117,5 +117,29 @@ const verifyToken = (req, res, next) => {
         next();
     });
 };
+const checkAuth = async (req, res) => {
+    // This function relies on the verifyToken middleware
+    const userId = req.userId; // This is set by the verifyToken middleware
 
-export { registerUser, signupWithGoogle, loginUser, verifyToken };
+    try {
+        // Fetch the user from the database
+        const user = await User.findById(userId).select('-password'); // Exclude password from the response
+        if (!user) {
+            return res.status(404).json({ message: 'User not found.' });
+        }
+
+        // Return user information (excluding password)
+        res.status(200).json({
+            uid: user.uid,
+            fullName: user.fullName,
+            email: user.email,
+            profilePicUrl: user.profilePicUrl,
+            status: user.status,
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Something went wrong while checking authentication.' });
+    }
+};
+
+export { registerUser, signupWithGoogle, loginUser, verifyToken,checkAuth };

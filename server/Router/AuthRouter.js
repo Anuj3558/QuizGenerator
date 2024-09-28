@@ -4,9 +4,11 @@ const AuthRouter = Router();
 
 // Import your controllers
 import {
+    checkAuth,
     loginUser,
   registerUser,
   signupWithGoogle,
+  verifyToken,
 
 } from "../controller/AuthController.js"; // Update the path accordingly
 
@@ -17,9 +19,10 @@ AuthRouter.post("/register", registerUser);
 AuthRouter.post("/login", loginUser);
 
 // // Logout route
-// AuthRouter.post("/logout", logoutUser);
+AuthRouter.get("/check",verifyToken,checkAuth);
 
 // // Example protected route
+
 AuthRouter.post("/signup-with-google",signupWithGoogle)
 
 export default AuthRouter;
