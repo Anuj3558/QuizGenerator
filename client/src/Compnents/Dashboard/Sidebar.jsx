@@ -57,8 +57,10 @@ export default function Sidebar({
   return (
     <>
       {/* Static Sidebar for Large Screens */}
+
       <div className="hidden md:block w-64  bg-gray-800 h-full p-4 border-r border-gray-700">
-        
+ 
+       
         <nav className="space-y-4">
           {sidebarItems.map((item) => (
             <SidebarButton

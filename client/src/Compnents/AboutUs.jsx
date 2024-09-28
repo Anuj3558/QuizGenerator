@@ -9,11 +9,12 @@ import {
   Rocket,
   FileUp,
 } from "lucide-react";
+import HowItWorksSection from "./Home/HowitWorks";
 
 const FeatureCard = ({ icon: Icon, title, description }) => (
   <motion.div
     whileHover={{ scale: 1.05 }}
-    className="relative p-6 bg-gray-800 bg-opacity-50 rounded-lg overflow-hidden transition-all duration-300 group"
+    className="relative p-6  bg-gray-800 bg-opacity-50 rounded-lg overflow-hidden transition-all duration-300 group"
   >
     <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-600 opacity-0 group-hover:opacity-50 transition-opacity duration-300"></div>
     <div className="relative z-10">
@@ -31,7 +32,7 @@ const FeatureCard = ({ icon: Icon, title, description }) => (
 
 export default function AboutUs() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-blue-900 text-white p-8">
+    <div className="min-h-screen pt-10 bg-gradient-to-br from-gray-900 to-blue-900 text-white p-8 pt-36">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -84,43 +85,7 @@ export default function AboutUs() {
           />
         </div>
 
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.5, duration: 0.5 }}
-          className="text-center mb-16"
-        >
-          <h2 className="text-3xl font-semibold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-green-400 to-blue-500">
-            How It Works
-          </h2>
-          <ol className="list-decimal list-inside text-left max-w-3xl mx-auto space-y-4 text-gray-300">
-            <li>Teachers create a virtual classroom and invite students.</li>
-            <li>
-              Teachers can upload a syllabus PDF or input curriculum details.
-            </li>
-            <li>
-              AI analyzes the syllabus and generates quizzes, questions,
-              answers, and study notes.
-            </li>
-            <li>
-              Students join the classroom and access AI-generated content and
-              quizzes.
-            </li>
-            <li>
-              The system automatically grades the quizzes and provides instant
-              feedback.
-            </li>
-            <li>
-              Teachers review the results and get insights into student
-              performance.
-            </li>
-            <li>
-              Based on the results, the AI suggests areas for improvement and
-              additional resources.
-            </li>
-          </ol>
-        </motion.div>
-
+       <HowItWorksSection />
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}

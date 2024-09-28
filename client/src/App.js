@@ -19,7 +19,7 @@ import LoginPage from "./Compnents/Auth/LoginPage.jsx";
 function App() {
   return (
     <BrowserRouter>
-     
+
       <Nav />
       <Routes>
         {/* Define routes for each page */}
@@ -29,8 +29,7 @@ function App() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/about" element={<AboutUs />} />
         <Route path="/quiz-analysis" element={<QuizAnalytics />} />
-        {/*
-        <Route path="/signup" element={<Signup />} /> */}
+
       </Routes>
       <Footer />
     </BrowserRouter>

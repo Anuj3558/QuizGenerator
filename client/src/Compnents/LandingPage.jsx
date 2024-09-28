@@ -12,12 +12,10 @@ import { motion } from 'framer-motion'
 // import Testimonials from "./Home/Testimonials";
 // import Footer from "./Home/Footer";
 
-import Nav from './Home/Nav'
-import Hero from './Home/HeroSection'
-import Features from './Home/Features'
-import Testimonials from './Home/Testimonials'
-import Footer from './Home/Footer'
+
+
 import HowItWorksSection from './Home/HowitWorks'
+import CallToAction from './Home/CallToAction'
 
 
 export default function LandingPage() {
@@ -28,6 +26,7 @@ export default function LandingPage() {
         <Hero />
         <Features />
         <HowItWorksSection />
+        <CallToAction />
         <Testimonials />
        
       </div>
