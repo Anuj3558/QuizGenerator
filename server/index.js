@@ -31,7 +31,7 @@ ConnectToMongoDb(MONGOURL);
 
 // Middleware
 app.use(cors({
-    origin: 'http://localhost:3000', // or your React app's URL
+   origin: 'http://localhost:3000'||"https://quiz-generator-blond.vercel.app",// or your React app's URL
   }));
   // Enable CORS for all routes
 app.use(cookieParser()); // Parse cookies
