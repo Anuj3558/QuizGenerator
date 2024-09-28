@@ -1,13 +1,17 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { ChevronRight, User, Mail, Lock } from 'lucide-react';
+import React, { useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
+import { ChevronRight, User, Mail, Lock } from "lucide-react";
 import { FaGoogle } from "react-icons/fa";
-
+import axios from "axios";
+import { UserContext } from "../../Context/UserContext";
 
 const Input = ({ icon: Icon, ...props }) => (
   <div className="relative">
-    <Icon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-blue-400" size={18} />
+    <Icon
+      className="absolute left-3 top-1/2 transform -translate-y-1/2 text-blue-400"
+      size={18}
+    />
     <input
       {...props}
       className="w-full bg-gray-900 border border-blue-500 rounded-md py-2 pl-10 pr-4 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition duration-200"
@@ -27,19 +31,60 @@ const Button = ({ children, className, ...props }) => (
 );
 
 const SignUpPage = () => {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [error, setError] = useState("");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const { userType, setUserType } = useContext(UserContext);
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Sign-up attempt with:', { name, email, password });
-    navigate('/login');
+
+    // Reset any previous error
+    setError("");
+
+    // Basic form validation
+    if (!name || !email || !password) {
+      setError("All fields are required");
+      return;
+    }
+    console.log("Sign-up attempt with:", {
+      name,
+      email,
+      password,
+      userType,
+    });
+
+    try {
+      // Call the backend API for registration
+      console.log("signup->", process.env.REACT_APP_API_URL);
+      const response = await axios.post(
+        `${process.env.REACT_APP_API_URL}/auth/register`,
+        {
+          userName: name,
+          userEmail: email,
+          userPass: password,
+          userType:"student", // Assuming you might have user types, adjust as necessary
+        }
+      );
+
+      console.log("Sign-up successful:", response.data);
+
+      // Redirect the user to the login page after successful signup
+      navigate("/login");
+    } catch (err) {
+      // Handle API errors
+      if (err.response && err.response.data) {
+        setError(err.response.data.message);
+      } else {
+        setError("An error occurred. Please try again.");
+      }
+    }
   };
 
   const handleGoogleSignUp = () => {
-    console.log('Sign up with Google');
+    console.log("Sign up with Google");
   };
 
   return (
@@ -87,15 +132,18 @@ const SignUpPage = () => {
               </Button>
             </form>
             <div className="mt-6">
-              <Button onClick={handleGoogleSignUp} className="bg-gray-700 hover:bg-gray-600">
-             <FaGoogle  className="inline-block mr-2" size={18} />
+              <Button
+                onClick={handleGoogleSignUp}
+                className="bg-gray-700 hover:bg-gray-600"
+              >
+                <FaGoogle className="inline-block mr-2" size={18} />
                 Sign up with Google
               </Button>
             </div>
           </div>
           <div className="px-8 py-4 bg-gray-700 text-center">
             <p className="text-sm">
-              Already have an account?{' '}
+              Already have an account?{" "}
               <a href="/login" className="text-blue-400 hover:underline">
                 Log in
               </a>

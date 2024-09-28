@@ -1,10 +1,8 @@
-import mongoose from 'mongoose';
-
+import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema({
   uid: {
     type: String,
-    required: true,
     unique: true,
   },
   password: {
@@ -13,7 +11,7 @@ const userSchema = new mongoose.Schema({
   },
   profilePicUrl: {
     type: String,
-    default: 'default-profile-pic.jpg',
+    default: "default-profile-pic.jpg",
   },
   fullName: {
     type: String,
@@ -24,12 +22,13 @@ const userSchema = new mongoose.Schema({
     required: true,
     unique: true,
   },
+  userType:{
+    type:String,
+  },
   phone: String,
   location: String,
 });
 
-
-
-const User = mongoose.model('User', userSchema);
+const User = mongoose.model("User", userSchema);
 
 export default User;

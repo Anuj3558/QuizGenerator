@@ -1,14 +1,18 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "./ui/Button"; // Adjust the path if necessary
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom"; // Import useNavigate
 import { Menu, X } from "lucide-react";
+import { UserContext } from "../../Context/UserContext";
+import axios from "axios";
 
 // Menu icon for mobile
-const Nav = ({ isLoggedIn: initialLoggedIn = true }) => {
+const Nav = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(initialLoggedIn);
+  const { isLoggedIn, setIsLoggedIn } = useContext(UserContext);
+  const { userType } = useContext(UserContext); // Get userType from context
+  const navigate = useNavigate(); // Initialize useNavigate
 
   useEffect(() => {
     const handleScroll = () => {
@@ -24,6 +28,15 @@ const Nav = ({ isLoggedIn: initialLoggedIn = true }) => {
 
   const handleLogin = () => {
     setIsLoggedIn(true);
+  };
+
+  const handleDashboardClick = () => {
+    if (userType === "NA") {
+      // Navigate to /userType if userType is 'NA'
+      navigate("/userType"); // Adjust the path as necessary based on userType
+    } else {
+      navigate("/dashboard");
+    }
   };
 
   return (
@@ -63,13 +76,18 @@ const Nav = ({ isLoggedIn: initialLoggedIn = true }) => {
           <div className="hidden md:flex items-center justify-end md:flex-1 lg:w-0 space-x-4">
             {isLoggedIn ? (
               <>
-                <Link to="/dashboard">
-                  <Button variant="ghost" className="text-gray-300 hover:text-white">
-                    Dashboard
-                  </Button>
-                </Link>
+                <Button
+                  variant="ghost"
+                  className="text-gray-300 hover:text-white"
+                  onClick={handleDashboardClick} // Use the new click handler
+                >
+                  Dashboard
+                </Button>
                 <Link to="/about">
-                  <Button variant="ghost" className="text-gray-300 hover:text-white">
+                  <Button
+                    variant="ghost"
+                    className="text-gray-300 hover:text-white"
+                  >
                     About Us
                   </Button>
                 </Link>
@@ -115,11 +133,12 @@ const Nav = ({ isLoggedIn: initialLoggedIn = true }) => {
             <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
               {isLoggedIn ? (
                 <>
-                  <Link to="/dashboard">
-                    <Button className="w-full text-left text-gray-300 hover:text-white">
-                      Dashboard
-                    </Button>
-                  </Link>
+                  <Button
+                    onClick={handleDashboardClick} // Use the new click handler
+                    className="w-full text-left text-gray-300 hover:text-white"
+                  >
+                    Dashboard
+                  </Button>
                   <Link to="/about">
                     <Button className="w-full text-left text-gray-300 hover:text-white">
                       About Us
