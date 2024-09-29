@@ -1,11 +1,13 @@
-import React, { useContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { motion } from "framer-motion";
-import { ChevronRight, Mail, Lock } from "lucide-react";
+import React, { useState, useContext } from 'react';
+import { Navigate, useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import { ChevronRight, Mail, Lock } from 'lucide-react';
 import { FaGoogle } from "react-icons/fa";
-import { toast } from "react-toastify";
-import axios from "axios";
-import { UserContext } from "../../Context/UserContext";
+import axios from 'axios';
+import { ThemeContext } from '../../Context/ThemeContext';
+import { auth, googleProvider } from '../../Firebase/firebaseconfig'; // Ensure you have your Firebase config set up
+import Cookies from "js-cookie"; // Use js-cookie for cookie management
+import { signInWithPopup } from "firebase/auth"; // Import signInWithPopup from Firebase
 
 const Input = ({ icon: Icon, ...props }) => (
   <div className="relative">
@@ -32,58 +34,67 @@ const Button = ({ children, className, ...props }) => (
 );
 
 const LoginPage = () => {
-
-  const{isLoggedIn, setIsLoggedIn}=useContext(UserContext);
-  const [error, setError] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
-
+  const { setSuccessMsg, setErrMsg, setTheme } = useContext(ThemeContext);
+  const Navigate = useNavigate();
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Reset any previous error
-    setError("");
-
-    // Basic form validation
-    if (!email || !password) {
-      setError("All fields are required");
-      return;
-    }
-
-    console.log("Login attempt with:", { email, password });
+    setErrorMessage('');
 
     try {
-      // Call the backend API for login
-      const response = await axios.post(
-        `${process.env.REACT_APP_API_URL}/auth/login`, // Update to your actual login endpoint
-        {
-          userEmail: email,
-          userPass: password,
-        }
-      );
-      setIsLoggedIn(true);
-      console.log("Login successful:", response.data);
+      const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/auth/login`, {
+        userEmail: email,
+        userPass: password,
+      });
+      const id = response.data.token;
+      Cookies.set("_id",id);  
+      setSuccessMsg("Login successful!");
+      setTheme("success");
+      localStorage.setItem('token', response.data.token);
+     
+      navigate("/")
+      window.location.reload();
 
-      // Optionally save the token to local storage or context
-      localStorage.setItem("token", response.data.token); // Save token for authenticated requests
-      // Redirect the user to the dashboard or home page after successful login
-      navigate("/"); // Adjust the path based on your application
-      toast.success("Login successful!"); // Success notification
-    } catch (err) {
-      // Handle API errors
-      if (err.response && err.response.data) {
-        setError(err.response.data.message);
-      } else {
-        setError("An error occurred. Please try again.");
-      }
+    } catch (error) {
+      console.error('Error during login:', error.response?.data || error.message);
+      setErrorMessage(error.response?.data?.message || 'Login failed. Please try again.');
+      setErrMsg('Login failed. Please try again.');
+      setTheme("error");
     }
-    
   };
 
-  const handleGoogleLogin = () => {
-    console.log("Login with Google");
-    // Implement GitHub login logic here
+  const handleGoogleLogin = async () => {
+    try {
+      const result = await signInWithPopup(auth, googleProvider); // Correctly use signInWithPopup
+      const user = result.user;
+
+      // Extract user data
+      const userData = {
+        userName: user.displayName,
+        userEmail: user.email,
+        userProfilePic: user.photoURL,
+        uid: user.uid,
+      };
+
+      // Send user data to your backend
+      const res = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/auth/signup-with-google`, userData);
+      const id = res.data.token;
+      Cookies.set("_id", id); // Set the cookie
+
+      setSuccessMsg("Goggle signup success!");
+      setTheme("success");
+      window.location.reload();
+      Navigate("/")
+
+    } catch (error) {
+      console.error('Error during Google sign-in:', error.message);
+      setErrorMessage('Google sign-in failed. Please try again.');
+      setErrMsg('Google sign-in failed. Please try again.');
+      setTheme("error");
+    }
   };
 
 
@@ -102,6 +113,9 @@ const LoginPage = () => {
                 Welcome Back
               </span>
             </h2>
+            {errorMessage && (
+              <div className="mb-4 text-red-500 text-center">{errorMessage}</div>
+            )}
             <form onSubmit={handleSubmit} className="space-y-6">
               <Input
                 icon={Mail}
@@ -136,10 +150,7 @@ const LoginPage = () => {
               </Button>
             </form>
             <div className="mt-6">
-              <Button
-                onClick={handleGoogleLogin}
-                className="bg-gray-700 hover:bg-gray-600"
-              >
+              <Button onClick={handleGoogleLogin} className="bg-gray-700 hover:bg-gray-600">
                 <FaGoogle className="inline-block mr-2" size={18} />
                 Log in with Google
               </Button>

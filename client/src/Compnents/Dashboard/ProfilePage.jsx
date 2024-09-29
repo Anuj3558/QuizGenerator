@@ -1,5 +1,5 @@
-import React from "react";
-import PropTypes from "prop-types"; // Add PropTypes
+import React, { useContext, useState } from "react";
+import PropTypes from "prop-types";
 import { Avatar, AvatarImage, AvatarFallback } from "../Home/ui/avatar";
 import { Button } from "../Home/ui/Button.jsx";
 import Badge from "../Dashboard/Badge.jsx";
@@ -10,49 +10,64 @@ import {
   Briefcase,
   Mail,
   MapPin,
-  MessageSquare,
   Phone,
   Star,
   GraduationCap,
 } from "lucide-react";
+import { UserContext } from "../../Context/UserContext.js";
 
 const ProfilePage = ({ userType = "student" }) => {
-  const isTeacher = userType === "teacher";
+  const isTeacher = userType === "Teacher";
+  const { email, setEmail } = useContext(UserContext);
+  const { fullName, setFullName } = useContext(UserContext);
+  const { profilePicUrl, setProfilePicUrl } = useContext(UserContext);
 
-  const userName = isTeacher ? "John Doe" : "Jane Smith";
-  const userLocation = "New York, USA";
-  const userEmail = isTeacher
-    ? "john.doe@example.com"
-    : "jane.smith@example.com";
-  const userPhone = "+1 (555) 123-4567";
-  const userRole = isTeacher
-    ? "Senior Teacher at XYZ High School"
-    : "Student at XYZ High School";
+  // State for profile editing
+  const [isEditing, setIsEditing] = useState(false);
+  const [userName, setUserName] = useState(
+    isTeacher ? "John Doe" : "Jane Smith"
+  );
+ 
+  const [userEmail, setUserEmail] = useState(
+    isTeacher ? "john.doe@example.com" : "jane.smith@example.com"
+  );
+  const [userPhone, setUserPhone] = useState("+1 (555) 123-4567");
+  const [userRole, setUserRole] = useState(
+    isTeacher
+      ? "Senior Teacher at XYZ High School"
+      : "Student at XYZ High School"
+  );
+
+  const [achievements, setAchievements] = useState(
+    isTeacher
+      ? [
+          "Teacher of the Year 2023",
+          "Best Research Paper Award",
+          "100% Student Satisfaction",
+        ]
+      : ["Honor Roll Student", "Science Fair Winner", "Perfect Attendance"]
+  );
+  const [newAchievement, setNewAchievement] = useState("");
+
+  const [courses, setCourses] = useState(
+    isTeacher
+      ? [
+          { title: "Advanced Calculus", students: 25 },
+          { title: "Quantum Physics", students: 18 },
+          { title: "Data Structures", students: 30 },
+        ]
+      : [
+          { title: "Advanced Mathematics", grade: "A+" },
+          { title: "Physics 101", grade: "A" },
+          { title: "Computer Science Basics", grade: "A-" },
+        ]
+  );
+  const [newCourseTitle, setNewCourseTitle] = useState("");
+  const [newCourseGrade, setNewCourseGrade] = useState("");
 
   const badges = isTeacher
     ? ["Mathematics", "Physics", "Computer Science"]
     : ["High School", "Grade 11", "Honor Roll"];
-
-  const achievements = isTeacher
-    ? [
-        "Teacher of the Year 2023",
-        "Best Research Paper Award",
-        "100% Student Satisfaction",
-      ]
-    : ["Honor Roll Student", "Science Fair Winner", "Perfect Attendance"];
-
-  const courses = isTeacher
-    ? [
-        { title: "Advanced Calculus", students: 25 },
-        { title: "Quantum Physics", students: 18 },
-        { title: "Data Structures", students: 30 },
-      ]
-    : [
-        { title: "Advanced Mathematics", grade: "A+" },
-        { title: "Physics 101", grade: "A" },
-        { title: "Computer Science Basics", grade: "A-" },
-      ];
-
   const stats = isTeacher
     ? [
         { label: "Student Satisfaction", value: 95 },
@@ -65,28 +80,74 @@ const ProfilePage = ({ userType = "student" }) => {
         { label: "Homework Completion", value: 92 },
       ];
 
+  const handleEditClick = () => {
+    setIsEditing(true);
+  };
+
+  const handleSaveClick = () => {
+    setIsEditing(false);
+    // You can add functionality here to save changes to a database or API
+  };
+
+  const handleAchievementChange = (index, value) => {
+    const newAchievements = [...achievements];
+    newAchievements[index] = value;
+    setAchievements(newAchievements);
+  };
+
+  const handleAddAchievement = () => {
+    if (newAchievement.trim()) {
+      setAchievements([...achievements, newAchievement]);
+      setNewAchievement("");
+    }
+  };
+
+  const handleCourseChange = (index, value) => {
+    const newCourses = [...courses];
+    newCourses[index].title = value;
+    setCourses(newCourses);
+  };
+
+  const handleAddCourse = () => {
+    if (newCourseTitle.trim()) {
+      const courseData = isTeacher
+        ? { title: newCourseTitle, students: 0 }
+        : { title: newCourseTitle, grade: newCourseGrade };
+      setCourses([...courses, courseData]);
+      setNewCourseTitle("");
+      setNewCourseGrade("");
+    }
+  };
+
   return (
     <div className="bg-gradient-to-br from-gray-900 to-gray-800 p-8 rounded-xl shadow-2xl backdrop-filter backdrop-blur-lg border border-gray-700">
       <div className="flex flex-col md:flex-row items-center md:items-start space-y-6 md:space-y-0 md:space-x-8">
         <div className="relative">
           <Avatar className="w-32 h-32 border-4 border-purple-500">
-            <AvatarImage src="/profile-avatar.jpg" alt="Profile" />
+            <AvatarImage src={profilePicUrl} alt="Profile" />
             <AvatarFallback className="bg-purple-500 text-2xl font-bold">
               {isTeacher ? "JD" : "JS"}
             </AvatarFallback>
           </Avatar>
-          <Badge className="absolute bottom-0 right-0 bg-green-500">
+          {/* <Badge className="absolute bottom-0 right-0 bg-green-500">
             Online
-          </Badge>
+          </Badge> */}
         </div>
         <div className="flex-1 space-y-4">
           <div>
             <h2 className="text-4xl font-bold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600">
-              {userName}
+              {isEditing ? (
+                <input
+                  type="text"
+                  value={fullName}
+                  onChange={(e) => setUserName(e.target.value)}
+                  className="bg-gray-700 border border-gray-600 rounded px-2"
+                />
+              ) : (
+                fullName
+              )}
             </h2>
-            <p className="text-gray-400 flex items-center">
-              <MapPin className="w-4 h-4 mr-2" /> {userLocation}
-            </p>
+           
           </div>
           <div className="flex flex-wrap gap-2">
             {badges.map((badge, index) => (
@@ -103,19 +164,59 @@ const ProfilePage = ({ userType = "student" }) => {
             <p className="text-gray-300 flex items-center">
               {isTeacher ? (
                 <>
-                  <Briefcase className="w-4 h-4 mr-2" /> {userRole}
+                  <Briefcase className="w-4 h-4 mr-2" />
+                  {isEditing ? (
+                    <input
+                      type="text"
+                      value={userRole}
+                      onChange={(e) => setUserRole(e.target.value)}
+                      className="bg-gray-700 border border-gray-600 rounded px-2"
+                    />
+                  ) : (
+                    userRole
+                  )}
                 </>
               ) : (
                 <>
-                  <GraduationCap className="w-4 h-4 mr-2" /> {userRole}
+                  <GraduationCap className="w-4 h-4 mr-2" />
+                  {isEditing ? (
+                    <input
+                      type="text"
+                      value={userRole}
+                      onChange={(e) => setUserRole(e.target.value)}
+                      className="bg-gray-700 border border-gray-600 rounded px-2"
+                    />
+                  ) : (
+                    userRole
+                  )}
                 </>
               )}
             </p>
             <p className="text-gray-300 flex items-center">
-              <Mail className="w-4 h-4 mr-2" /> {userEmail}
+              <Mail className="w-4 h-4 mr-2" />
+              {isEditing ? (
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setUserEmail(e.target.value)}
+                  className="bg-gray-700 border border-gray-600 rounded px-2"
+                />
+              ) : (
+                email
+              )}
             </p>
             <p className="text-gray-300 flex items-center">
-              <Phone className="w-4 h-4 mr-2" /> {userPhone}
+              <Phone className="w-4 h-4 mr-2" />
+              {isEditing ? (
+                <input
+                  type="text"
+                  value={userPhone}
+                  onChange={(e) => setUserPhone(e.target.value)}
+                  className="bg-gray-700 border border-gray-600 rounded px-2"
+                />
+              ) : (
+                userPhone
+              )}
             </p>
           </div>
         </div>
@@ -130,10 +231,36 @@ const ProfilePage = ({ userType = "student" }) => {
           <ul className="space-y-2">
             {achievements.map((achievement, index) => (
               <li key={index} className="flex items-center">
-                <Award className="w-4 h-4 mr-2 text-purple-500" /> {achievement}
+                <Award className="w-4 h-4 mr-2 text-purple-500" />
+                {isEditing ? (
+                  <input
+                    type="text"
+                    value={achievement}
+                    onChange={(e) =>
+                      handleAchievementChange(index, e.target.value)
+                    }
+                    className="bg-gray-700 border border-gray-600 rounded px-2 flex-1"
+                  />
+                ) : (
+                  achievement
+                )}
               </li>
             ))}
           </ul>
+          {isEditing && (
+            <div className="flex items-center mt-4">
+              <input
+                type="text"
+                value={newAchievement}
+                onChange={(e) => setNewAchievement(e.target.value)}
+                placeholder="New Achievement"
+                className="bg-gray-700 border border-gray-600 rounded px-2 flex-1"
+              />
+              <Button onClick={handleAddAchievement} className="ml-2">
+                Add
+              </Button>
+            </div>
+          )}
         </div>
         <div className="bg-gray-800 p-4 rounded-lg">
           <h3 className="text-xl font-semibold mb-4 flex items-center">
@@ -142,52 +269,89 @@ const ProfilePage = ({ userType = "student" }) => {
           </h3>
           <ul className="space-y-2">
             {courses.map((course, index) => (
-              <li key={index}>
-                {course.title}
-                <Badge className="ml-2">
-                  {isTeacher ? `${course.students} students` : course.grade}
-                </Badge>
+              <li key={index} className="flex items-center">
+                {isEditing ? (
+                  <>
+                    <input
+                      type="text"
+                      value={course.title}
+                      onChange={(e) =>
+                        handleCourseChange(index, e.target.value)
+                      }
+                      className="bg-gray-700 border border-gray-600 rounded px-2 flex-1"
+                    />
+                    {isTeacher ? (
+                      <span className="ml-2 text-gray-400">
+                        Students: {course.students}
+                      </span>
+                    ) : (
+                      <span className="ml-2 text-gray-400">
+                        Grade: {course.grade}
+                      </span>
+                    )}
+                  </>
+                ) : (
+                  <>
+                    {course.title}
+                    {isTeacher ? (
+                      <Badge className="ml-2">{course.students} students</Badge>
+                    ) : (
+                      <Badge className="ml-2">{course.grade}</Badge>
+                    )}
+                  </>
+                )}
               </li>
             ))}
           </ul>
-        </div>
-      </div>
-
-      <div className="mt-6 bg-gray-800 p-4 rounded-lg">
-        <h3 className="text-xl font-semibold mb-4">
-          {isTeacher ? "Teaching Stats" : "Learning Stats"}
-        </h3>
-        <div className="space-y-4">
-          {stats.map((stat, index) => (
-            <div key={index}>
-              <div className="flex justify-between mb-1">
-                <span>{stat.label}</span>
-                <span>
-                  {stat.max ? `${stat.value}/${stat.max}` : `${stat.value}%`}
-                </span>
-              </div>
-              <Progress
-                value={stat.max ? (stat.value / stat.max) * 100 : stat.value}
-                className="h-2"
+          {isEditing && (
+            <div className="flex items-center mt-4">
+              <input
+                type="text"
+                value={newCourseTitle}
+                onChange={(e) => setNewCourseTitle(e.target.value)}
+                placeholder="New Course Title"
+                className="bg-gray-700 border border-gray-600 rounded px-2 flex-1"
               />
+              {isTeacher && (
+                <input
+                  type="text"
+                  value={newCourseGrade}
+                  onChange={(e) => setNewCourseGrade(e.target.value)}
+                  placeholder="Grade"
+                  className="bg-gray-700 border border-gray-600 rounded px-2 flex-1 ml-2"
+                />
+              )}
+              <Button onClick={handleAddCourse} className="ml-2">
+                Add
+              </Button>
             </div>
-          ))}
+          )}
         </div>
       </div>
 
-      <div className="mt-6 flex justify-center">
-        <Button className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-2 rounded-full transition duration-300 ease-in-out transform hover:scale-105">
-          <MessageSquare className="w-4 h-4 mr-2" />
-          {isTeacher ? "Contact John" : "Contact Jane"}
-        </Button>
+      <div className="mt-6 flex justify-between">
+        {isEditing ? (
+          <Button
+            onClick={handleSaveClick}
+            className="bg-green-500 hover:bg-green-600"
+          >
+            Save Changes
+          </Button>
+        ) : (
+          <Button
+            onClick={handleEditClick}
+            className="bg-blue-500 hover:bg-blue-600"
+          >
+            Edit Profile
+          </Button>
+        )}
       </div>
     </div>
   );
 };
 
-// Add PropTypes for validation
 ProfilePage.propTypes = {
-  userType: PropTypes.oneOf(["student", "teacher"]),
+  userType: PropTypes.oneOf(["Student", "Teacher", "NA"]),
 };
 
 export default ProfilePage;

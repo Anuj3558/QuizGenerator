@@ -1,7 +1,13 @@
+// studentSchema.js
 import mongoose from 'mongoose';
 import User from './userSchema.js';
 
 const studentSchema = new mongoose.Schema({
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User', // Reference to the User model
+    required: true,
+  },
   grade: String,
   school: String,
   achievements: [String],
@@ -16,6 +22,6 @@ const studentSchema = new mongoose.Schema({
   },
 });
 
-const Student = User.discriminator('Student', studentSchema);
+const Student = mongoose.model('Student', studentSchema);
 
 export default Student;

@@ -1,10 +1,13 @@
-import React, { useState, useContext } from "react";
-import { useNavigate } from "react-router-dom";
-import { motion } from "framer-motion";
-import { ChevronRight, User, Mail, Lock } from "lucide-react";
-import { FaGoogle } from "react-icons/fa";
-import axios from "axios";
-import { UserContext } from "../../Context/UserContext";
+import React, { useState, useContext } from 'react';
+import { Navigate, useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import { ChevronRight, User, Mail, Lock } from 'lucide-react';
+import { FaGoogle } from 'react-icons/fa';
+import axios from 'axios';
+import { ThemeContext } from '../../Context/ThemeContext';
+import { auth, googleProvider } from '../../Firebase/firebaseconfig.js';
+import { signInWithPopup } from "firebase/auth"; 
+import Cookie from 'js-cookie';
 
 const Input = ({ icon: Icon, ...props }) => (
   <div className="relative">
@@ -31,60 +34,83 @@ const Button = ({ children, className, ...props }) => (
 );
 
 const SignUpPage = () => {
-  const [error, setError] = useState("");
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { setSuccessMsg, setWarningMsg, setErrMsg, setTheme } = useContext(ThemeContext);
 
-  const { userType, setUserType } = useContext(UserContext);
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Reset any previous error
-    setError("");
-
-    // Basic form validation
-    if (!name || !email || !password) {
-      setError("All fields are required");
-      return;
-    }
-    console.log("Sign-up attempt with:", {
-      name,
-      email,
-      password,
-      userType,
-    });
+    setErrorMessage('');
+    setLoading(true);
+    const URL = process.env.REACT_APP_BACKEND_URL;
 
     try {
-      // Call the backend API for registration
-      console.log("signup->", process.env.REACT_APP_API_URL);
-      const response = await axios.post(
-        `${process.env.REACT_APP_API_URL}/auth/register`,
-        {
-          userName: name,
-          userEmail: email,
-          userPass: password,
-          userType:"student", // Assuming you might have user types, adjust as necessary
-        }
-      );
+      const response = await axios.post(`${URL}/auth/register`, {
+        userName: name,
+        userEmail: email,
+        userPass: password,
+      });
+      const id = response.data.token;
+      Cookie.set("_id", id);
+      setSuccessMsg("Registration successful!");
+      setTheme("success");
+      
+      // Reload the page before navigating
+     
+      navigate("/");
+      window.location.reload(); // This will be triggered after the reload
+    } catch (error) {
+      console.error('Error during registration:', error.response?.data || error.message);
 
-      console.log("Sign-up successful:", response.data);
-
-      // Redirect the user to the login page after successful signup
-      navigate("/login");
-    } catch (err) {
-      // Handle API errors
-      if (err.response && err.response.data) {
-        setError(err.response.data.message);
+      if (error.response?.status === 409) {
+        setErrorMessage('User already exists. Please log in.');
+        setWarningMsg('User already exists. Please log in.');
+        setTheme("warning");
       } else {
-        setError("An error occurred. Please try again.");
+        setErrorMessage(error.response?.data?.message || 'Registration failed. Please try again.');
+        setErrMsg('Registration failed. Please try again.');
+        setTheme("error");
       }
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handleGoogleSignUp = () => {
-    console.log("Sign up with Google");
+  const handleGoogleSignUp = async () => {
+    setLoading(true);
+    try {
+      const result = await signInWithPopup(auth, googleProvider);
+      const user = result.user;
+
+      const userData = {
+        userName: user.displayName,
+        userEmail: user.email,
+        userProfilePic: user.photoURL,
+        uid: user.uid,
+      };
+
+      const URL = process.env.REACT_APP_BACKEND_URL;
+      const res = await axios.post(`${URL}/auth/signup-with-google`, userData);
+      const id = res.data.token;
+      Cookie.set("_id", id);
+      setSuccessMsg("Registration successful!");
+      setTheme("success");
+
+      // Reload the page before navigating
+      window.location.reload();
+      navigate("/"); // This will be triggered after the reload
+    } catch (error) {
+      console.error('Error during Google sign-in:', error.message);
+      setErrorMessage('Google sign-in failed. Please try again.');
+      setErrMsg('Google sign-in failed. Please try again.');
+      setTheme("error");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -102,6 +128,9 @@ const SignUpPage = () => {
                 Join AIQuizGen
               </span>
             </h2>
+            {errorMessage && (
+              <div className="mb-4 text-red-500 text-center">{errorMessage}</div>
+            )}
             <form onSubmit={handleSubmit} className="space-y-6">
               <Input
                 icon={User}
@@ -127,17 +156,15 @@ const SignUpPage = () => {
                 onChange={(e) => setPassword(e.target.value)}
                 required
               />
-              <Button type="submit">
-                Sign Up <ChevronRight className="inline-block ml-2" size={18} />
+              <Button type="submit" disabled={loading}>
+                {loading ? 'Signing Up...' : 'Sign Up'}
+                <ChevronRight className="inline-block ml-2" size={18} />
               </Button>
             </form>
             <div className="mt-6">
-              <Button
-                onClick={handleGoogleSignUp}
-                className="bg-gray-700 hover:bg-gray-600"
-              >
+              <Button onClick={handleGoogleSignUp} className="bg-gray-700 hover:bg-gray-600" disabled={loading}>
                 <FaGoogle className="inline-block mr-2" size={18} />
-                Sign up with Google
+                {loading ? 'Signing Up...' : 'Sign up with Google'}
               </Button>
             </div>
           </div>

@@ -1,18 +1,49 @@
 import { useState, useEffect, useContext } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Button } from "./ui/Button"; // Adjust the path if necessary
-import { Link, useNavigate } from "react-router-dom"; // Import useNavigate
+import { Link, useNavigate } from "react-router-dom";
 import { Menu, X } from "lucide-react";
-import { UserContext } from "../../Context/UserContext";
-import axios from "axios";
+import { Button } from "../Compnents/Home/ui/Button";
+import { useAuth } from "../Context/AuthContext";
+import Cookie from "js-cookie";
+import { UserContext } from "../Context/UserContext";
 
-// Menu icon for mobile
-const Nav = () => {
+const Nav = ({ isLoggedIn: initialLoggedIn = true }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const { isLoggedIn, setIsLoggedIn } = useContext(UserContext);
-  const { userType } = useContext(UserContext); // Get userType from context
-  const navigate = useNavigate(); // Initialize useNavigate
+  const [isLoggedIn, setIsLoggedIn] = useState(initialLoggedIn);
+  const { user, logout, loading } = useAuth();
+  const { userType, setUserType } = useContext(UserContext);
+  const { email, setEmail } = useContext(UserContext);
+  const { fullName, setFullName } = useContext(UserContext);
+  const { profilePicUrl, setProfilePicUrl } = useContext(UserContext);
+  const { uid, setUid } = useContext(UserContext);
+  // const {userType,setUserType}=useContext(useContext);
+  const navigate = useNavigate();
+  const ut = localStorage.getItem("userType");
+  useEffect(() => {
+    if (!loading) {
+      console.log(user);
+
+      if (user) {
+        if (user.status === "Pending") {
+          navigate("/select-role");
+        } else if (user.status === "Partial") {
+          navigate("/complete-profile");
+        }
+        setEmail(user?.email);
+        setFullName(user?.fullName);
+        setProfilePicUrl(user?.profilePicUrl);
+        setUid(user?.uid);
+        setIsLoggedIn(true); // Update logged-in state
+      } else {
+        setIsLoggedIn(false); // Update logged-out state
+      }
+    }
+  }, [user, loading, navigate, Cookie.get("_id")]);
+  useEffect(() => {
+    setUserType(localStorage.getItem("userType"));
+    console.log("user type set", userType);
+  }, [user]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -23,19 +54,21 @@ const Nav = () => {
   }, []);
 
   const handleLogout = () => {
-    setIsLoggedIn(false);
+    Cookie.remove("_id");
+    logout(); // Optionally, redirect to login or home after logout
+    navigate("/");
+    window.location.reload();
   };
 
   const handleLogin = () => {
-    setIsLoggedIn(true);
+    navigate("/login");
   };
 
   const handleDashboardClick = () => {
-    if (userType === "NA") {
-      // Navigate to /userType if userType is 'NA'
-      navigate("/userType"); // Adjust the path as necessary based on userType
-    } else {
+    if (ut) {
       navigate("/dashboard");
+    } else {
+      navigate("/select-role");
     }
   };
 
@@ -64,6 +97,7 @@ const Nav = () => {
               variant="ghost"
               className="text-gray-300 hover:text-white"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              aria-expanded={isMobileMenuOpen}
             >
               {isMobileMenuOpen ? (
                 <X className="h-6 w-6" aria-hidden="true" />
@@ -91,6 +125,11 @@ const Nav = () => {
                     About Us
                   </Button>
                 </Link>
+                <img
+                  src={user?.profilePicUrl || " "} // Update this to the correct user profile image
+                  alt="Profile"
+                  className="w-8 h-8 rounded-full border border-gray-600"
+                />
                 <Button
                   onClick={handleLogout}
                   className="bg-red-600 hover:bg-red-700 text-white"

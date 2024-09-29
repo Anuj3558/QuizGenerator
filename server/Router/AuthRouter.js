@@ -4,22 +4,25 @@ const AuthRouter = Router();
 
 // Import your controllers
 import {
-  registerUser,
+  checkAuth,
   loginUser,
-  handleData,
+  registerUser,
+  signupWithGoogle,
+  verifyToken,
+  sendTeacher,
 } from "../controller/AuthController.js"; // Update the path accordingly
 
 // Register route
 AuthRouter.post("/register", registerUser);
 
-// // Login route
+// Login route
 AuthRouter.post("/login", loginUser);
-AuthRouter.post("/data",handleData);
 
 // // Logout route
-// AuthRouter.post("/logout", logoutUser);
-
+AuthRouter.get("/check",verifyToken,checkAuth);
+AuthRouter.post("/teacher-data", sendTeacher);
 // // Example protected route
-// AuthRouter.post("/signup-with-google",signupWithGoogle)
+
+AuthRouter.post("/signup-with-google",signupWithGoogle)
 
 export default AuthRouter;

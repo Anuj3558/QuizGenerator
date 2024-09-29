@@ -1,4 +1,5 @@
-import mongoose from "mongoose";
+// userSchema.js
+import mongoose from 'mongoose';
 
 const userSchema = new mongoose.Schema({
   uid: {
@@ -11,7 +12,6 @@ const userSchema = new mongoose.Schema({
   },
   profilePicUrl: {
     type: String,
-    default: "default-profile-pic.jpg",
   },
   fullName: {
     type: String,
@@ -27,8 +27,17 @@ const userSchema = new mongoose.Schema({
   },
   phone: String,
   location: String,
+  userType: {
+    type: String,
+    enum: ["Teacher", "Student"],
+  },
+  status: {
+    type: String,
+    enum: ["Pending", "Completed", "Partial"],
+    default: "Pending",
+  },
 });
 
-const User = mongoose.model("User", userSchema);
+const User = mongoose.model('User', userSchema);
 
 export default User;

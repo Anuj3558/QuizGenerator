@@ -1,44 +1,38 @@
 "use client";
 
-import { motion } from "framer-motion";
-import Nav from "./Home/Nav";
+
+
+import { motion } from 'framer-motion'
+
 import Hero from "./Home/HeroSection";
 import Features from "./Home/Features";
 import Testimonials from "./Home/Testimonials";
-import Footer from "./Home/Footer";
-
-import HowItWorksSection from "./Home/HowitWorks";
-import CallToAction from "./Home/CallToAction";
-import { useContext, useEffect } from "react";
-import { UserContext } from "../Context/UserContext";
-import axios from "axios";
+import HowItWorksSection from './Home/HowitWorks'
+import CallToAction from './Home/CallToAction'
+import { useAuth } from '../Context/AuthContext';
+import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
+import Cookie from "js-cookie"
 
 export default function LandingPage() {
-  const token = localStorage.getItem("token");
-  const { isLoggedIn, setIsLoggedIn } = useContext(UserContext);
+  const { user, loading } = useAuth();
+  const navigate = useNavigate();
+
   useEffect(() => {
-    if (localStorage.getItem("token")) {
-      setIsLoggedIn(true);
-    }
-  }, []);
-  useEffect(() => {
-    const fetchData = async () => {
-      if (isLoggedIn) {
-        const token = localStorage.getItem("token"); // Get the token from localStorage
-        try {
-          const response = await axios.post(
-            `${process.env.REACT_APP_API_URL}/auth/data`,
-            { token }
-          );
-          console.log("Fetched data:", response?.data);
-        } catch (error) {
-          console.error("Error fetching data:", error);
+    if (!loading) {
+      if (user) {
+        if (user.status === "Pending") {
+          navigate("/select-role");
+        }
+        else if(user.status === "Partial"){
+          navigate(`/complete-profile`)
         }
       }
-    };
-
-    fetchData(); // Call the fetchData function
-  }, [isLoggedIn]);
+      else{
+        navigate("/")
+      }
+    }
+  }, [user, loading, navigate,Cookie.get("_id")]);
   return (
     <div className="min-h-screen poppins-regular pt-7 bg-gradient-to-br from-blue-950 to-black text-white overflow-hidden">
       <div className="container mx-auto px-4 py-16 relative">

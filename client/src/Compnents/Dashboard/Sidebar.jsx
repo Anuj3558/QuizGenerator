@@ -20,7 +20,7 @@ export default function Sidebar({
 }) {
   // Sidebar items based on user type
   const sidebarItems =
-    userType === "teacher"
+    userType === "Teacher"
       ? [
           { id: "profile", icon: User, label: "Profile" },
           { id: "create-quiz", icon: PlusCircle, label: "Create Quiz" },
@@ -57,10 +57,7 @@ export default function Sidebar({
   return (
     <>
       {/* Static Sidebar for Large Screens */}
-
-      <div className="hidden md:block w-64  bg-gray-800 h-full p-4 border-r border-gray-700">
- 
-       
+      <div className="hidden md:block w-64 bg-gray-800 h-full p-4 border-r border-gray-700">
         <nav className="space-y-4">
           {sidebarItems.map((item) => (
             <SidebarButton
