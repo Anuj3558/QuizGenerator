@@ -4,7 +4,6 @@ import mongoose from 'mongoose';
 const userSchema = new mongoose.Schema({
   uid: {
     type: String,
-    required: true,
     unique: true,
   },
   password: {
@@ -22,6 +21,9 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
     unique: true,
+  },
+  userType:{
+    type:String,
   },
   phone: String,
   location: String,

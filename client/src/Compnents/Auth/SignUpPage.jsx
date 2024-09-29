@@ -11,7 +11,10 @@ import Cookie from 'js-cookie';
 
 const Input = ({ icon: Icon, ...props }) => (
   <div className="relative">
-    <Icon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-blue-400" size={18} />
+    <Icon
+      className="absolute left-3 top-1/2 transform -translate-y-1/2 text-blue-400"
+      size={18}
+    />
     <input
       {...props}
       className="w-full bg-gray-900 border border-blue-500 rounded-md py-2 pl-10 pr-4 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition duration-200"
@@ -167,7 +170,7 @@ const SignUpPage = () => {
           </div>
           <div className="px-8 py-4 bg-gray-700 text-center">
             <p className="text-sm">
-              Already have an account?{' '}
+              Already have an account?{" "}
               <a href="/login" className="text-blue-400 hover:underline">
                 Log in
               </a>

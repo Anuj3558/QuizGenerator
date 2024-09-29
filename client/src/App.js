@@ -19,40 +19,46 @@ import Footer from "./Compnents/Footer.jsx";
 import { useAuth } from "./Context/AuthContext.js";
 import StudentDataForm from "./Compnents/Auth/StudentDataForm.jsx";
 import TeacherDataForm from "./Compnents/Auth/TeacherDataForm.jsx";
+import UserProvider from "./Context/UserContext.js";
 
 // import Login from "./Compnents";
 
 function App() {
+  const userType=localStorage.getItem("userType")
   const {user}=useAuth();
   console.log(user)
   const {  theme,setTheme,successMsg, setSuccessMsg,WarningMsg, setwarninigsg,errMsg, seterrMsg} =useContext(ThemeContext);
   return (
-    <BrowserRouter>
-    <Nav />
-    <Routes>
-      <Route path="/" element={<LandingPage />} />
-      <Route path="/signup" element={<SignUpPage />} />
-      <Route path="/login" element={<LoginPage />} />
-      <Route path="/dashboard" element={<Dashboard />} />
-      <Route path="/about" element={<AboutUs />} />
-      <Route path="/quiz-analysis" element={<QuizAnalytics />} />
-      <Route path="/select-role" element={<UserTypeSelection />} />
-      {user?.userType&&user?.userType ==="Student" ?<Route path="/complete-profile" element={<StudentDataForm />} />:
-      <Route path="/complete-profile" element={<TeacherDataForm/>} />}
-    </Routes>
-    <Footer />
-    {/* Notifications */}
-    {theme === "success" && successMsg && (
-        <SuccessNotification message={successMsg} position="top-right" />
-      )}
-      {theme === "warning" && WarningMsg && (
-        <WarningNotification message={WarningMsg} position="top-right" />
-      )}
-      {theme === "error" && errMsg && (
-        <ErrorNotification message={errMsg} position="bottom-right" />
-      )}
-  </BrowserRouter>
-  
+    <UserProvider>
+      <BrowserRouter>
+        <Nav />
+        <Routes>
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/signup" element={<SignUpPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/dashboard" element={<Dashboard userType={userType} />} />
+          <Route path="/about" element={<AboutUs />} />
+          <Route path="/quiz-analysis" element={<QuizAnalytics />} />
+          <Route path="/select-role" element={<UserTypeSelection />} />
+          {user?.userType && user?.userType === "Student" ? (
+            <Route path="/complete-profile" element={<StudentDataForm />} />
+          ) : (
+            <Route path="/complete-profile" element={<TeacherDataForm />} />
+          )}
+        </Routes>
+        <Footer />
+        {/* Notifications */}
+        {theme === "success" && successMsg && (
+          <SuccessNotification message={successMsg} position="top-right" />
+        )}
+        {theme === "warning" && WarningMsg && (
+          <WarningNotification message={WarningMsg} position="top-right" />
+        )}
+        {theme === "error" && errMsg && (
+          <ErrorNotification message={errMsg} position="bottom-right" />
+        )}
+      </BrowserRouter>
+    </UserProvider>
   );
 }
 

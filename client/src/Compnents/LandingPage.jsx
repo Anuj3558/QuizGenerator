@@ -36,16 +36,14 @@ export default function LandingPage() {
   return (
     <div className="min-h-screen poppins-regular pt-7 bg-gradient-to-br from-blue-950 to-black text-white overflow-hidden">
       <div className="container mx-auto px-4 py-16 relative">
-       
         <Hero />
         <Features />
         <HowItWorksSection />
         <CallToAction />
         <Testimonials />
-       
       </div>
 
-     {/* Floating Motion Elements */}
+      {/* Floating Motion Elements */}
       <motion.div
         className="fixed top-20 left-10 w-20 h-20 bg-blue-500 rounded-full filter blur-3xl opacity-20"
         animate={{
@@ -55,7 +53,7 @@ export default function LandingPage() {
         transition={{
           duration: 4,
           repeat: Infinity,
-          ease: "easeInOut", 
+          ease: "easeInOut",
         }}
       />
       <motion.div

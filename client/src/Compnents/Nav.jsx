@@ -1,35 +1,49 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import { Button } from "../Compnents/Home/ui/Button";
 import { useAuth } from "../Context/AuthContext";
 import Cookie from "js-cookie";
+import { UserContext } from "../Context/UserContext";
 
 const Nav = ({ isLoggedIn: initialLoggedIn = true }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(initialLoggedIn);
-  const { user,logout, loading } = useAuth();
+  const { user, logout, loading } = useAuth();
+  const { userType, setUserType } = useContext(UserContext);
+  const { email, setEmail } = useContext(UserContext);
+  const { fullName, setFullName } = useContext(UserContext);
+  const { profilePicUrl, setProfilePicUrl } = useContext(UserContext);
+  const { uid, setUid } = useContext(UserContext);
+  // const {userType,setUserType}=useContext(useContext);
   const navigate = useNavigate();
-
+  const ut = localStorage.getItem("userType");
   useEffect(() => {
     if (!loading) {
-      console.log(user)
+      console.log(user);
+
       if (user) {
         if (user.status === "Pending") {
           navigate("/select-role");
+        } else if (user.status === "Partial") {
+          navigate("/complete-profile");
         }
-        else if(user.status ==="Partial"){
-           navigate("/complete-profile")
-        }
+        setEmail(user?.email);
+        setFullName(user?.fullName);
+        setProfilePicUrl(user?.profilePicUrl);
+        setUid(user?.uid);
         setIsLoggedIn(true); // Update logged-in state
       } else {
-      
         setIsLoggedIn(false); // Update logged-out state
       }
     }
-  }, [user, loading, navigate,Cookie.get("_id")]);
+  }, [user, loading, navigate, Cookie.get("_id")]);
+  useEffect(() => {
+    setUserType(localStorage.getItem("userType"));
+    console.log("user type set", userType);
+  }, [user]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -41,16 +55,21 @@ const Nav = ({ isLoggedIn: initialLoggedIn = true }) => {
 
   const handleLogout = () => {
     Cookie.remove("_id");
-    logout()
-   
-;    // Optionally, redirect to login or home after logout
+    logout(); // Optionally, redirect to login or home after logout
     navigate("/");
-    window.location.reload()
+    window.location.reload();
   };
 
   const handleLogin = () => {
-    
     navigate("/login");
+  };
+
+  const handleDashboardClick = () => {
+    if (ut) {
+      navigate("/dashboard");
+    } else {
+      navigate("/select-role");
+    }
   };
 
   return (
@@ -91,20 +110,25 @@ const Nav = ({ isLoggedIn: initialLoggedIn = true }) => {
           <div className="hidden md:flex items-center justify-end md:flex-1 lg:w-0 space-x-4">
             {isLoggedIn ? (
               <>
-                <Link to="/dashboard">
-                  <Button variant="ghost" className="text-gray-300 hover:text-white">
-                    Dashboard
-                  </Button>
-                </Link>
+                <Button
+                  variant="ghost"
+                  className="text-gray-300 hover:text-white"
+                  onClick={handleDashboardClick} // Use the new click handler
+                >
+                  Dashboard
+                </Button>
                 <Link to="/about">
-                  <Button variant="ghost" className="text-gray-300 hover:text-white">
+                  <Button
+                    variant="ghost"
+                    className="text-gray-300 hover:text-white"
+                  >
                     About Us
                   </Button>
                 </Link>
-                <img 
-                  src={user?.profilePicUrl  || " "} // Update this to the correct user profile image
-                  alt="Profile" 
-                  className="w-8 h-8 rounded-full border border-gray-600" 
+                <img
+                  src={user?.profilePicUrl || " "} // Update this to the correct user profile image
+                  alt="Profile"
+                  className="w-8 h-8 rounded-full border border-gray-600"
                 />
                 <Button
                   onClick={handleLogout}
@@ -148,11 +172,12 @@ const Nav = ({ isLoggedIn: initialLoggedIn = true }) => {
             <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
               {isLoggedIn ? (
                 <>
-                  <Link to="/dashboard">
-                    <Button className="w-full text-left text-gray-300 hover:text-white">
-                      Dashboard
-                    </Button>
-                  </Link>
+                  <Button
+                    onClick={handleDashboardClick} // Use the new click handler
+                    className="w-full text-left text-gray-300 hover:text-white"
+                  >
+                    Dashboard
+                  </Button>
                   <Link to="/about">
                     <Button className="w-full text-left text-gray-300 hover:text-white">
                       About Us

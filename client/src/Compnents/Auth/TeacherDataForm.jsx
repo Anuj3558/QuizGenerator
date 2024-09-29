@@ -101,10 +101,11 @@ const TeacherDataForm = () => {
           },
         }
       )
+      Navigate("/dashboard");
       console.log('Profile submitted:', response.data)
       setSuccessMsg('Registration successful!')
       setTheme('success')
-      Navigate("/dashboard")
+      
     } catch (err) {
       console.error('Error submitting profile:', err)
       setErrMsg('There was an error submitting your profile. Please try again.')

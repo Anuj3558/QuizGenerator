@@ -11,7 +11,10 @@ import { signInWithPopup } from "firebase/auth"; // Import signInWithPopup from 
 
 const Input = ({ icon: Icon, ...props }) => (
   <div className="relative">
-    <Icon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-blue-400" size={18} />
+    <Icon
+      className="absolute left-3 top-1/2 transform -translate-y-1/2 text-blue-400"
+      size={18}
+    />
     <input
       {...props}
       className="w-full bg-gray-900 border border-blue-500 rounded-md py-2 pl-10 pr-4 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition duration-200"
@@ -94,6 +97,7 @@ const LoginPage = () => {
     }
   };
 
+
   return (
     <div className="min-h-screen bg-gray-900 text-white flex items-center justify-center p-4">
       <motion.div
@@ -131,7 +135,10 @@ const LoginPage = () => {
               />
               <div className="flex items-center justify-between text-sm">
                 <label className="flex items-center">
-                  <input type="checkbox" className="form-checkbox h-4 w-4 text-blue-600 transition duration-150 ease-in-out" />
+                  <input
+                    type="checkbox"
+                    className="form-checkbox h-4 w-4 text-blue-600 transition duration-150 ease-in-out"
+                  />
                   <span className="ml-2 text-gray-400">Remember me</span>
                 </label>
                 <a href="#" className="text-blue-400 hover:underline">
@@ -151,7 +158,7 @@ const LoginPage = () => {
           </div>
           <div className="px-8 py-4 bg-gray-700 text-center">
             <p className="text-sm">
-              Don't have an account?{' '}
+              Don't have an account?{" "}
               <a href="/signup" className="text-blue-400 hover:underline">
                 Sign up
               </a>
