@@ -10,7 +10,7 @@ const Nav = ({ isLoggedIn: initialLoggedIn = true }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(initialLoggedIn);
-  const { user, loading } = useAuth();
+  const { user,logout, loading } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -23,11 +23,9 @@ const Nav = ({ isLoggedIn: initialLoggedIn = true }) => {
         else if(user.status ==="Partial"){
            navigate("/complete-profile")
         }
-        else{
-          
-        }
         setIsLoggedIn(true); // Update logged-in state
       } else {
+      
         setIsLoggedIn(false); // Update logged-out state
       }
     }
@@ -43,9 +41,11 @@ const Nav = ({ isLoggedIn: initialLoggedIn = true }) => {
 
   const handleLogout = () => {
     Cookie.remove("_id");
-    window.location.reload()
+    logout()
+   
 ;    // Optionally, redirect to login or home after logout
     navigate("/");
+    window.location.reload()
   };
 
   const handleLogin = () => {

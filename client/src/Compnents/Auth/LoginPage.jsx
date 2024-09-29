@@ -51,8 +51,9 @@ const LoginPage = () => {
       setSuccessMsg("Login successful!");
       setTheme("success");
       localStorage.setItem('token', response.data.token);
-      window.location.reload();
+     
       navigate("/")
+      window.location.reload();
 
     } catch (error) {
       console.error('Error during login:', error.response?.data || error.message);
