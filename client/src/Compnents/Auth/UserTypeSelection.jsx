@@ -36,7 +36,7 @@ export default function UserTypeSelection() {
       }, {
         headers: { Authorization: `Bearer ${token}` },
       });
-     
+     window.location.reload();
       // Navigate to the complete profile page after the request
       navigate(`/`);
     } catch (error) {

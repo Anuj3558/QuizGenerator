@@ -51,7 +51,8 @@ const LoginPage = () => {
       setSuccessMsg("Login successful!");
       setTheme("success");
       localStorage.setItem('token', response.data.token);
-      
+      window.location.reload();
+      navigate("/")
 
     } catch (error) {
       console.error('Error during login:', error.response?.data || error.message);
@@ -81,6 +82,7 @@ const LoginPage = () => {
 
       setSuccessMsg("Goggle signup success!");
       setTheme("success");
+      window.location.reload();
       Navigate("/")
 
     } catch (error) {

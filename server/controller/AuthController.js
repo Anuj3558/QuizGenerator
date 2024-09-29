@@ -136,6 +136,7 @@ const checkAuth = async (req, res) => {
             email: user.email,
             profilePicUrl: user.profilePicUrl,
             status: user.status,
+            userType: user.userType
         });
     } catch (err) {
         console.error(err);

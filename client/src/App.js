@@ -18,11 +18,13 @@ import Nav from "./Compnents/Nav.jsx";
 import Footer from "./Compnents/Footer.jsx";
 import { useAuth } from "./Context/AuthContext.js";
 import StudentDataForm from "./Compnents/Auth/StudentDataForm.jsx";
+import TeacherDataForm from "./Compnents/Auth/TeacherDataForm.jsx";
 
 // import Login from "./Compnents";
 
 function App() {
-  
+  const {user}=useAuth();
+  console.log(user)
   const {  theme,setTheme,successMsg, setSuccessMsg,WarningMsg, setwarninigsg,errMsg, seterrMsg} =useContext(ThemeContext);
   return (
     <BrowserRouter>
@@ -35,7 +37,8 @@ function App() {
       <Route path="/about" element={<AboutUs />} />
       <Route path="/quiz-analysis" element={<QuizAnalytics />} />
       <Route path="/select-role" element={<UserTypeSelection />} />
-      <Route path="/complete-profile" element={<StudentDataForm />} />
+      {user?.userType&&user?.userType ==="Student" ?<Route path="/complete-profile" element={<StudentDataForm />} />:
+      <Route path="/complete-profile" element={<TeacherDataForm/>} />}
     </Routes>
     <Footer />
     {/* Notifications */}

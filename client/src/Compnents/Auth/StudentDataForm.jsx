@@ -1,11 +1,16 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
+import axios from 'axios'; // Import axios
+import Cookies from 'js-cookie'; // Import js-cookie
 import { motion } from 'framer-motion';
 import { ChevronRight, ChevronLeft, Plus, Minus } from 'lucide-react';
+import { ThemeContext } from '../../Context/ThemeContext';
 
 export default function StudentDataForm() {
   const [step, setStep] = useState(1);
+  const { theme, setTheme, successMsg, setSuccessMsg, warningMsg, setWarningMsg, errMsg, setErrMsg } = useContext(ThemeContext);
+  
   const [formData, setFormData] = useState({
     grade: '',
     school: '',
@@ -71,10 +76,32 @@ export default function StudentDataForm() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Form submitted:', formData);
-    // Here you would typically send the data to your backend
+
+    try {
+      const token = Cookies.get('_id'); // Retrieve the _id cookie for the authorization token
+
+      const response = await axios.post(
+        `${process.env.REACT_APP_BACKEND_URL}/user/submit-student-data`, // Replace with your API endpoint
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Set Authorization header
+          },
+        }
+      );
+      if (response) {
+        setSuccessMsg('Profile completed');
+        setTheme('success');
+      }
+
+      console.log('Form submitted:', response.data); // Log the response from the API
+    } catch (error) {
+      setErrMsg('Server Error please try again');
+      setTheme('error');
+      console.error('Error submitting form:', error);
+    }
   };
 
   const renderStep = () => {
@@ -223,34 +250,33 @@ export default function StudentDataForm() {
         transition={{ duration: 0.5 }}
         className="w-full max-w-2xl bg-gray-800 rounded-lg shadow-xl p-8"
       >
-        <h1 className="text-3xl font-bold mb-6 text-center bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-600">
-          Student Profile Setup
+        <h1 className="text-3xl font-bold mb-6 text-center bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-teal-400">
+          Student Data Form
         </h1>
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form  className="space-y-4">
           {renderStep()}
           <div className="flex justify-between mt-8">
             {step > 1 && (
               <button
                 type="button"
                 onClick={() => setStep((prev) => prev - 1)}
-                className="px-4 py-2 bg-gray-700 rounded-md flex items-center"
+                className="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-md flex items-center"
               >
-                <ChevronLeft size={20} className="mr-2" /> Previous
+                <ChevronLeft className="mr-2" />
+                Previous
               </button>
             )}
             {step < 4 ? (
               <button
                 type="button"
                 onClick={() => setStep((prev) => prev + 1)}
-                className="px-4 py-2 bg-blue-600 rounded-md flex items-center ml-auto"
+                className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md flex items-center"
               >
-                Next <ChevronRight size={20} className="ml-2" />
+                Next
+                <ChevronRight className="ml-2" />
               </button>
             ) : (
-              <button
-                type="submit"
-                className="px-4 py-2 bg-green-600 rounded-md flex items-center ml-auto"
-              >
+              <button onClick={handleSubmit} type="submit" className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md">
                 Submit
               </button>
             )}

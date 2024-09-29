@@ -20,12 +20,18 @@ const Nav = ({ isLoggedIn: initialLoggedIn = true }) => {
         if (user.status === "Pending") {
           navigate("/select-role");
         }
+        else if(user.status ==="Partial"){
+           navigate("/complete-profile")
+        }
+        else{
+          
+        }
         setIsLoggedIn(true); // Update logged-in state
       } else {
         setIsLoggedIn(false); // Update logged-out state
       }
     }
-  }, [user, loading, navigate]);
+  }, [user, loading, navigate,Cookie.get("_id")]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -37,8 +43,9 @@ const Nav = ({ isLoggedIn: initialLoggedIn = true }) => {
 
   const handleLogout = () => {
     Cookie.remove("_id");
-    // Optionally, redirect to login or home after logout
-    navigate("/login");
+    window.location.reload()
+;    // Optionally, redirect to login or home after logout
+    navigate("/");
   };
 
   const handleLogin = () => {

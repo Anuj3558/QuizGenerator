@@ -1,11 +1,26 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { motion } from 'framer-motion';
 import { ChevronRight, ChevronLeft, Plus, Minus } from 'lucide-react';
+import axios from 'axios';
+import Cookie from 'js-cookie';
+import { ThemeContext } from '../../Context/ThemeContext';
+ // Import your notification component
 
 const TeacherDataForm = () => {
   const [step, setStep] = useState(1);
+  const {
+    theme,
+    setTheme,
+    successMsg,
+    setSuccessMsg,
+    warningMsg,
+    setWarningMsg,
+    errMsg,
+    setErrMsg,
+  } = useContext(ThemeContext);
+
   const [formData, setFormData] = useState({
     subject: [''],
     qualification: '',
@@ -73,10 +88,28 @@ const TeacherDataForm = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Form submitted:', formData);
-    // Here you would typically send the data to your backend
+    const token = Cookie.get('_id');
+    try {
+      const response = await axios.post(
+        `${process.env.REACT_APP_BACKEND_URL}/user/submit-student-data`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+      console.log('Profile submitted:', response.data);
+      setSuccessMsg('Registration successful!');
+      setTheme('success');
+    } catch (err) {
+      console.error('Error submitting profile:', err);
+      setErrMsg('There was an error submitting your profile. Please try again.');
+      setTheme('error');
+    }
   };
 
   const renderStep = () => {
@@ -255,7 +288,11 @@ const TeacherDataForm = () => {
         <h1 className="text-3xl font-bold mb-6 text-center bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-600">
           Teacher Profile Setup
         </h1>
-        <form onSubmit={handleSubmit} className="space-y-6">
+        
+        {/* Notification Component for Success and Error Messages */}
+ 
+
+        <form  className="space-y-6">
           {renderStep()}
           <div className="flex justify-between mt-8">
             {step > 1 && (
@@ -277,6 +314,7 @@ const TeacherDataForm = () => {
               </button>
             ) : (
               <button
+              onClick={handleSubmit}
                 type="submit"
                 className="px-4 py-2 bg-green-600 rounded-md flex items-center ml-auto"
               >

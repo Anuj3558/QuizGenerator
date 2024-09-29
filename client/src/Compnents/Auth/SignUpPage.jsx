@@ -55,7 +55,11 @@ const SignUpPage = () => {
       Cookie.set("_id", id);
       setSuccessMsg("Registration successful!");
       setTheme("success");
+      
+      // Reload the page before navigating
+     
       navigate("/");
+      window.location.reload(); // This will be triggered after the reload
     } catch (error) {
       console.error('Error during registration:', error.response?.data || error.message);
 
@@ -92,7 +96,10 @@ const SignUpPage = () => {
       Cookie.set("_id", id);
       setSuccessMsg("Registration successful!");
       setTheme("success");
-      navigate("/"); // Navigate to home
+
+      // Reload the page before navigating
+      window.location.reload();
+      navigate("/"); // This will be triggered after the reload
     } catch (error) {
       console.error('Error during Google sign-in:', error.message);
       setErrorMessage('Google sign-in failed. Please try again.');
