@@ -94,15 +94,7 @@ export default function Classrooms({ userType }) {
     }
   };
 
-  const generateCode = () => {
-    const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-    return Array(6)
-      .fill()
-      .map(() =>
-        characters.charAt(Math.floor(Math.random() * characters.length))
-      )
-      .join("");
-  };
+
 
   const handleSubmit = (e) => {
     e.preventDefault();

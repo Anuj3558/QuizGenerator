@@ -13,6 +13,8 @@ export const AuthProvider = ({ children }) => {
   const [teacher, setTeacher] = useState(null);
   const [loading, setLoading] = useState(true);
 
+
+  
   const logout = () => {
     setUser(null);
     setTeacher(null); // Clear teacher data on logout

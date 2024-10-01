@@ -26,7 +26,7 @@ const userSchema = new mongoose.Schema({
     type:String,
   },
   phone: String,
-  location: String,
+  location: String, 
   userType: {
     type: String,
     enum: ["Teacher", "Student"],
