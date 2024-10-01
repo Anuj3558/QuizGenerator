@@ -95,6 +95,7 @@ export default function StudentDataForm() {
         setSuccessMsg('Profile completed')
         setTheme('success')
         Navigate("/dashboard")
+        window.location.reload()
       }
 
       console.log('Form submitted:', response.data)

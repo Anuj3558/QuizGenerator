@@ -101,8 +101,9 @@ const SignUpPage = () => {
       setTheme("success");
 
       // Reload the page before navigating
-      window.location.reload();
-      navigate("/"); // This will be triggered after the reload
+
+      navigate("/");
+      window.location.reload(); // This will be triggered after the reload
     } catch (error) {
       console.error('Error during Google sign-in:', error.message);
       setErrorMessage('Google sign-in failed. Please try again.');

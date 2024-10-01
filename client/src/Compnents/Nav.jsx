@@ -34,6 +34,7 @@ const Nav = ({ isLoggedIn: initialLoggedIn = true }) => {
         setFullName(user?.fullName);
         setProfilePicUrl(user?.profilePicUrl);
         setUid(user?.uid);
+      
         setIsLoggedIn(true); // Update logged-in state
       } else {
         setIsLoggedIn(false); // Update logged-out state

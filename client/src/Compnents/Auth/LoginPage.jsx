@@ -51,12 +51,15 @@ const LoginPage = () => {
       });
       const id = response.data.token;
       Cookies.set("_id",id);  
-      setSuccessMsg("Login successful!");
-      setTheme("success");
+      
       localStorage.setItem('token', response.data.token);
      
       navigate("/")
+ 
+      setSuccessMsg("Login successful!");
+      setTheme("success");
       window.location.reload();
+    
 
     } catch (error) {
       console.error('Error during login:', error.response?.data || error.message);
@@ -86,8 +89,9 @@ const LoginPage = () => {
 
       setSuccessMsg("Goggle signup success!");
       setTheme("success");
-      window.location.reload();
+
       Navigate("/")
+      window.location.reload();
 
     } catch (error) {
       console.error('Error during Google sign-in:', error.message);
