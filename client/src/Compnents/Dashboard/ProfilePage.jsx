@@ -311,7 +311,7 @@ const ProfilePage = ({ userType = "student" }) => {
               />
               {isTeacher && (
                 <input
-                  type="number"
+                  type="num"
                   value={newCourseGrade}
                   onChange={(e) => setNewCourseGrade(e.target.value)}
                   placeholder="Grade"
