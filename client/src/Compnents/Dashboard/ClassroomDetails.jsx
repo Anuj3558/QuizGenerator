@@ -22,11 +22,11 @@ function ClassroomDetail({
   const [newContent, setNewContent] = useState("");
   const [file, setFile] = useState(null);
 
-  // Sections for content types
+  // Sections for content types with accepted file types
   const sections = [
-    { name: "Videos", icon: Video, acceptTypes: "video/*" },
-    { name: "Announcements", icon: BookOpen, acceptTypes: null },
-    { name: "Notes", icon: FileText, acceptTypes: ".pdf,.doc,.docx,.txt" },
+    { name: "Videos", icon: Video, acceptTypes: "video/mp4" }, // Only accept MP4 for videos
+    { name: "Announcements", icon: BookOpen, acceptTypes: null }, // No file input
+    { name: "Notes", icon: FileText, acceptTypes: ".pdf,.doc,.docx,.txt" }, // Accept document types
     {
       name: "Syllabus",
       icon: GraduationCap,
@@ -92,16 +92,14 @@ function ClassroomDetail({
           <div>
             <p className="text-sm text-gray-400 mb-2">{content.name}</p>
             <video controls className="w-full rounded-md" src={content.file} />
-            <p className="text-xs text-gray-500">{timeAgo}</p>{" "}
-            {/* Display timestamp */}
+            <p className="text-xs text-gray-500">{timeAgo}</p>
           </div>
         );
       case "text":
         return (
           <div>
             <p className="text-gray-300">{content.content}</p>
-            <p className="text-xs text-gray-500">{timeAgo}</p>{" "}
-            {/* Display timestamp */}
+            <p className="text-xs text-gray-500">{timeAgo}</p>
           </div>
         );
       case "notes":
@@ -117,8 +115,7 @@ function ClassroomDetail({
             >
               View {content.type}
             </a>
-            <p className="text-xs text-gray-500">{timeAgo}</p>{" "}
-            {/* Display timestamp */}
+            <p className="text-xs text-gray-500">{timeAgo}</p>
           </div>
         );
       default:
@@ -217,12 +214,28 @@ function ClassroomDetail({
                     onChange={(e) => {
                       if (e.target.files.length > 0) {
                         const selectedFile = e.target.files[0];
-                        // Check if the selected file is of type MP4
-                        if (selectedFile.type === "video/mp4") {
-                          setFile(selectedFile);
-                        } else {
+                        // Check if the selected file is of the correct type
+                        if (
+                          activeSection === "Videos" &&
+                          selectedFile.type !== "video/mp4"
+                        ) {
                           alert("Please upload a valid MP4 video file.");
                           setFile(null);
+                        } else if (
+                          activeSection !== "Videos" &&
+                          ![
+                            "application/pdf",
+                            "application/msword",
+                            "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                            "text/plain",
+                          ].includes(selectedFile.type)
+                        ) {
+                          alert(
+                            "Please upload a valid document file (PDF, DOC, DOCX, TXT)."
+                          );
+                          setFile(null);
+                        } else {
+                          setFile(selectedFile);
                         }
                       } else {
                         setFile(null); // Reset file if no file is selected
