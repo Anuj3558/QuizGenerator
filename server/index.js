@@ -33,22 +33,7 @@ ConnectToMongoDb(MONGOURL);
 
 // Middleware for CORS
 app.use(
-  cors({
-    origin: function (origin, callback) {
-      const allowedOrigins = [
-        "http://localhost:3000",
-        "https://quiz-generator-blond.vercel.app",
-      ];
-
-      // Allow requests with no origin, like mobile apps or curl requests
-      if (!origin || allowedOrigins.indexOf(origin) !== -1) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
-    credentials: true, // Allow cookies and other credentials
-  })
+  cors()
 );
 
 // Enable CORS for preflight requests
