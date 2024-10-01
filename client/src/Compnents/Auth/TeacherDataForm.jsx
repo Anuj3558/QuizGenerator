@@ -102,6 +102,7 @@ const TeacherDataForm = () => {
         }
       )
       Navigate("/dashboard");
+      window.location.reload();
       console.log('Profile submitted:', response.data)
       setSuccessMsg('Registration successful!')
       setTheme('success')
