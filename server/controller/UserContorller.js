@@ -141,7 +141,7 @@ const completeProfile = async (req, res) => {
 };
 const fetchTeacher = async (req, res) => {
   const { userId } = req.body;
-  console.log("user id of tescher", userId);
+  
   try {
     const teacher = await Teacher.findOne({ userId });
     // console.log(teacher);
