@@ -315,7 +315,7 @@ export default function CreateQuiz() {
           {generatedQuestions.map((q, index) => (
             <div key={index} className="mb-4">
               <strong className="text-gray-200">
-                {index + 1}. {q.question}
+                {index + 1}. {q.text}
               </strong>
               <ul className="list-disc list-inside text-gray-400">
                 {q.options.map((option, optionIndex) => (

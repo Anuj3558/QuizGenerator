@@ -39,7 +39,7 @@ app.use("/user", verifyToken);
 app.use("/user", UserRouter);
 app.use("/api/quiz", QuizRouter);
 
-app.use('/api/quiz', UploadRouter);
+
 
 // Start server
 app.listen(PORT, () => {
