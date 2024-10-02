@@ -4,8 +4,7 @@ import User from './userSchema.js';
 
 const studentSchema = new mongoose.Schema({
   userId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User', // Reference to the User model
+    type: String, // Reference to the User model
     required: true,
   },
   grade: String,

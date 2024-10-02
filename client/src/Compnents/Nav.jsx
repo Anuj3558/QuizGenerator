@@ -24,7 +24,7 @@ const Nav = ({ isLoggedIn: initialLoggedIn = true }) => {
   const ut = localStorage.getItem("userType");
   useEffect(() => {
     if (!loading) {
-      console.log(user);
+
 
       if (user) {
         if (user.status === "Pending") {

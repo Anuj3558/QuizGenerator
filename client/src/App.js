@@ -26,7 +26,7 @@ import UserProvider from "./Context/UserContext.js";
 function App() {
   const userType=localStorage.getItem("userType")
   const {user}=useAuth();
-  console.log(user)
+
   const {  theme,setTheme,successMsg, setSuccessMsg,WarningMsg, setwarninigsg,errMsg, seterrMsg} =useContext(ThemeContext);
   return (
     <UserProvider>
