@@ -288,7 +288,7 @@ export default function CreateQuiz() {
             <h2 className="text-xl">Generated Questions</h2>
             {generatedQuestions.map((q, index) => (
               <div key={index} className="mb-4">
-                <h3>{index + 1}. {q.question}</h3>
+                <h3>{index + 1}. {q.text}</h3>
                 <ul>
                   {q.options.map((option, optionIndex) => (
                     <li key={optionIndex}>{option}</li>
