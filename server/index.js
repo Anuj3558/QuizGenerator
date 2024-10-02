@@ -8,6 +8,7 @@ import AuthRouter from "./Router/AuthRouter.js";
 import dotenv from "dotenv"; // Load environment variables
 import UserRouter from "./Router/UserRouter.js";
 import { verifyToken } from "./controller/AuthController.js";
+import UploadRouter from "./Router/quizFileRoutes.js";
 
 // Load environment variables
 dotenv.config(); // Use dotenv to load `.env` file
@@ -48,7 +49,7 @@ app.use(bodyParser.urlencoded({ extended: true })); // Parse URL-encoded bodies
 app.use("/auth", AuthRouter);
 app.use("/user", verifyToken); // Middleware for token verification
 app.use("/user", UserRouter);
-
+app.use('/api/quiz', UploadRouter);
 // Start server
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
