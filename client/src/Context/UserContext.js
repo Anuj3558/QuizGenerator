@@ -14,6 +14,8 @@ const UserProvider = ({ children }) => {
   const [email, setEmail] = useState();
   const [fullName, setFullName] = useState();
   const [profilePicUrl, setProfilePicUrl] = useState("");
+  const [phone, setPhone] = useState("");
+  const [location, setLocation] = useState("");
   const [classroom, setClassroom] = useState({
     classroomName: "",
     teacherName: "",
@@ -26,12 +28,15 @@ const UserProvider = ({ children }) => {
     },
     students: [],
   });
-  const [userData, setUserData] = useState({
-    fullName: "",
-    email: "",
-    profilePicUrl: "", // Set default or leave empty
-    userPhone: "",
-  });
+  
+
+  //teacher states
+  const [subject, setSubject] = useState([]);
+  const [qualification, setQualification] = useState("");
+  const [experience, setExperience] = useState(0);
+  const [currentSchool, setCurrentSchool] = useState("");
+  const [achievements, setAchievements] = useState([]);
+  const [courses, setCourses] = useState([]);
 
   const teacherInfo = async () => {
     const token = Cookie.get("_id");
@@ -45,8 +50,17 @@ const UserProvider = ({ children }) => {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-      setTeacher(response.data);
-      console.log("teacher data", teacher);
+
+      const teacherData = response?.data?.teacher;
+      if (teacherData) {
+        setTeacher(teacherData); // Set the teacher state
+        setSubject(teacherData.subject);
+        setQualification(teacherData.qualification);
+        setExperience(teacherData.experience);
+        setCurrentSchool(teacherData.currentSchool);
+        setAchievements(teacherData.achievements);
+        setCourses(teacherData.courses);
+      }
     } catch (error) {
       console.error("Unable to fetch teacher data:", error);
     }
@@ -61,7 +75,7 @@ const UserProvider = ({ children }) => {
   };
   useEffect(() => {
     teacherInfo();
-  }, []);
+  }, [user]);
 
   return (
     <UserContext.Provider
@@ -70,8 +84,6 @@ const UserProvider = ({ children }) => {
         setUserType,
         isLoggedIn,
         setIsLoggedIn,
-        userData,
-        setUserData,
         email,
         setEmail,
         fullName,
@@ -84,6 +96,22 @@ const UserProvider = ({ children }) => {
         setUid,
         teacher,
         setTeacher,
+        phone,
+        setPhone,
+        location,
+        setLocation,
+        subject,
+        setSubject,
+        qualification,
+        setQualification,
+        experience,
+        setExperience,
+        currentSchool,
+        setCurrentSchool,
+        achievements,
+        setAchievements,
+        courses,
+        setCourses,
       }}
     >
       {children}

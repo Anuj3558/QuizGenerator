@@ -1,6 +1,6 @@
-import Classroom from "../model/Classroom.js"; // Adjust the path if needed
+import Classroom from "../model/Classroom.js";
 
-// Utility function to generate a unique alphanumeric code
+// Utility function to generate a unique classroom code
 const generateUniqueCode = (length = 6) => {
   const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
   let result = "";
@@ -10,6 +10,7 @@ const generateUniqueCode = (length = 6) => {
   return result;
 };
 
+// Create a classroom
 // Define the createClassroom function
 const createClassroom = async (req, res) => {
   try {
@@ -52,17 +53,49 @@ const createClassroom = async (req, res) => {
     });
   }
 };
+
+// Get classrooms for a specific teacher
 const getClassrooms = async (req, res) => {
   const { teacherId } = req.body;
   console.log(teacherId);
   try {
     const classrooms = await Classroom.find({ teacherId });
-    
+
     res.status(200).json({ classrooms });
   } catch (error) {
     console.log("Error in fetching classroos ");
   }
 };
 
-// Export the function if you are going to use it in a route
-export { createClassroom, getClassrooms };
+// Add content to a classroom
+const addContent = async (req, res) => {
+  console.log(req.body);
+  try {
+    const { classroomId } = req.params;
+    const { contentType, content, name } = req.body;
+
+    const classroom = await Classroom.findById(classroomId);
+    if (!classroom)
+      return res
+        .status(404)
+        .json({ success: false, message: "Classroom not found" });
+
+    classroom.content[contentType].push({
+      content,
+      name,
+      timestamp: new Date(),
+    });
+
+    await classroom.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Content added successfully",
+      classroom,
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+export { createClassroom, getClassrooms, addContent };
