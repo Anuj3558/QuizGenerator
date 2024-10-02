@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import Quiz from "../model/QuizModal.js";
+import Quiz from "../model/QuizModel.js";
 
 const api = process.env.API_KEY;
 const genAI = new GoogleGenerativeAI("AIzaSyDkd5EeKWI7BZz9Fv2dFiSkEZGdqvhc5pk");

@@ -30,7 +30,7 @@ const ManualQuestionInput = ({
         type="text"
         value={option}
         onChange={(e) => onChange(index, "option", e.target.value, optionIndex)}
-        placeholder={`Option ${optionIndex + 1}`}
+        placeholder={Option `${optionIndex + 1}`}
       />
     ))}
     <Input

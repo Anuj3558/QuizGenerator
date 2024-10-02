@@ -9,7 +9,7 @@ import {
   FileText,
   GraduationCap,
 } from "lucide-react";
-import { formatDistanceToNow } from "date-fns";
+
 
 function ClassroomDetail({
   classroom,
@@ -82,9 +82,7 @@ function ClassroomDetail({
 
   // Function to render content based on its type
   const renderContent = (content) => {
-    const timeAgo = formatDistanceToNow(new Date(content.timestamp), {
-      addSuffix: true,
-    }); // Format the timestamp
+    const timeAgo =""; // Format the timestamp
 
     switch (content.type) {
       case "video":
