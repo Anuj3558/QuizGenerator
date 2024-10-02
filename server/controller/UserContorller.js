@@ -72,7 +72,7 @@ const completeProfile = async (req, res) => {
       if (!studentProfile) {
         // Create a new student profile if it doesn't exist
         const newStudent = new Student({
-          userId: user._id,
+          userId: user.uid,
           grade,
           school,
           achievements,
@@ -98,7 +98,7 @@ const completeProfile = async (req, res) => {
       if (!teacherProfile) {
         // Create a new teacher profile if it doesn't exist
         const newTeacher = new Teacher({
-          userId: user._id,
+          userId: user.uid,
           subject,
           qualification,
           experience,
@@ -144,10 +144,80 @@ const fetchTeacher = async (req, res) => {
   console.log("user id of tescher", userId);
   try {
     const teacher = await Teacher.findOne({ userId });
-    console.log(teacher);
+    // console.log(teacher);
+    res.status(200).json({ teacher });
   } catch (error) {
     console.log("Erroe occured in fetching teacher");
   }
 };
+const handleChanges = async (req, res) => {
+  console.log(req.body);
+  try {
+    const {
+      userId,
+      subject,
+      qualification,
+      experience,
+      currentSchool,
+      achievements,
+      courses,
+      phone,
+      location,
+      fullName,
+    } = req.body;
 
-export { setUser, completeProfile, fetchTeacher };
+    // Update Teacher schema
+    const updatedTeacher = await Teacher.findOneAndUpdate(
+      { userId: userId }, // Find by userId
+      {
+        $set: {
+          subject: subject.filter((subj) => subj !== ""), // Filter out empty subjects
+          qualification: qualification,
+          experience: experience,
+          currentSchool: currentSchool,
+          achievements: achievements.filter((ach) => ach !== ""), // Filter out empty achievements
+          courses: courses.map((course) => ({
+            title: course.title,
+            students: course.students,
+          })),
+        },
+      },
+      { new: true } // Return the updated document
+    );
+
+    // Update User schema
+    const updatedUser = await User.findOneAndUpdate(
+      { uid: userId }, // Find by userId in the User schema
+      {
+        $set: {
+          phone: phone,
+          fullName: fullName,
+          location: location,
+        },
+      },
+      { new: true }
+    );
+
+    // Check if both Teacher and User documents were found and updated
+    if (!updatedTeacher) {
+      return res.status(404).json({ message: "Teacher not found" });
+    }
+    if (!updatedUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    console.log("Updated teacher data", updatedTeacher);
+    console.log("Updated user data", updatedUser);
+    return res.status(200).json({
+      message: "Teacher and user updated successfully",
+      updatedTeacher,
+      updatedUser,
+    });
+  } catch (error) {
+    console.error("Error updating teacher and user data:", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+
+export { setUser, completeProfile, fetchTeacher, handleChanges };

@@ -17,6 +17,8 @@ const Nav = ({ isLoggedIn: initialLoggedIn = true }) => {
   const { fullName, setFullName } = useContext(UserContext);
   const { profilePicUrl, setProfilePicUrl } = useContext(UserContext);
   const { uid, setUid } = useContext(UserContext);
+  const { phone, setPhone } = useContext(UserContext);
+  const { location, setLocation } = useContext(UserContext);
   // const {userType,setUserType}=useContext(useContext);
   const navigate = useNavigate();
   const ut = localStorage.getItem("userType");
@@ -34,7 +36,8 @@ const Nav = ({ isLoggedIn: initialLoggedIn = true }) => {
         setFullName(user?.fullName);
         setProfilePicUrl(user?.profilePicUrl);
         setUid(user?.uid);
-      
+        setPhone(user?.phone);
+        setLocation(user?.location);
         setIsLoggedIn(true); // Update logged-in state
       } else {
         setIsLoggedIn(false); // Update logged-out state

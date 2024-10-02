@@ -145,6 +145,8 @@ const checkAuth = async (req, res) => {
       profilePicUrl: user.profilePicUrl,
       status: user.status,
       userType: user.userType,
+      location: user.location,
+      phone: user.phone,
     });
   } catch (err) {
     console.error(err);
@@ -154,9 +156,8 @@ const checkAuth = async (req, res) => {
   }
 };
 const sendTeacher = async (req, res) => {
-  console.log("req.body ->",req.body);
+  console.log("req.body ->", req.body);
   try {
-    
   } catch (error) {
     console.log(error);
   }

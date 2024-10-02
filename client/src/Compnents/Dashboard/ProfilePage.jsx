@@ -4,6 +4,7 @@ import { Avatar, AvatarImage, AvatarFallback } from "../Home/ui/avatar";
 import { Button } from "../Home/ui/Button.jsx";
 import Badge from "../Dashboard/Badge.jsx";
 import Progress from "../Dashboard/Progress.jsx";
+import Cookie from "js-cookie";
 import {
   Award,
   Book,
@@ -15,53 +16,38 @@ import {
   GraduationCap,
 } from "lucide-react";
 import { UserContext } from "../../Context/UserContext.js";
+import axios from "axios";
+import { useAuth } from "../../Context/AuthContext.js";
 
 const ProfilePage = ({ userType = "student" }) => {
+  const token = Cookie.get("_id");
+  const { user } = useAuth();
   const isTeacher = userType === "Teacher";
   const { email, setEmail } = useContext(UserContext);
   const { fullName, setFullName } = useContext(UserContext);
   const { profilePicUrl, setProfilePicUrl } = useContext(UserContext);
-
+  const { phone, setPhone } = useContext(UserContext);
+  const { location, setLocation } = useContext(UserContext);
+  const { subject, setSubject } = useContext(UserContext);
+  const { qualification, setQualification } = useContext(UserContext);
+  const { experience, setExperience } = useContext(UserContext);
+  const { currentSchool, setCurrentSchool } = useContext(UserContext);
+  const { achievements, setAchievements } = useContext(UserContext);
+  const { courses, setCourses } = useContext(UserContext);
+  // console.log(
+  //   "States",
+  //   subject,
+  //   qualification,
+  //   experience,
+  //   currentSchool,
+  //   achievements,
+  //   courses
+  // );
   // State for profile editing
+  console.log("location", location);
   const [isEditing, setIsEditing] = useState(false);
-  const [userName, setUserName] = useState(
-    isTeacher ? "John Doe" : "Jane Smith"
-  );
- 
-  const [userEmail, setUserEmail] = useState(
-    isTeacher ? "john.doe@example.com" : "jane.smith@example.com"
-  );
-  const [userPhone, setUserPhone] = useState("+1 (555) 123-4567");
-  const [userRole, setUserRole] = useState(
-    isTeacher
-      ? "Senior Teacher at XYZ High School"
-      : "Student at XYZ High School"
-  );
 
-  const [achievements, setAchievements] = useState(
-    isTeacher
-      ? [
-          "Teacher of the Year 2023",
-          "Best Research Paper Award",
-          "100% Student Satisfaction",
-        ]
-      : ["Honor Roll Student", "Science Fair Winner", "Perfect Attendance"]
-  );
   const [newAchievement, setNewAchievement] = useState("");
-
-  const [courses, setCourses] = useState(
-    isTeacher
-      ? [
-          { title: "Advanced Calculus", students: 25 },
-          { title: "Quantum Physics", students: 18 },
-          { title: "Data Structures", students: 30 },
-        ]
-      : [
-          { title: "Advanced Mathematics", grade: "A+" },
-          { title: "Physics 101", grade: "A" },
-          { title: "Computer Science Basics", grade: "A-" },
-        ]
-  );
   const [newCourseTitle, setNewCourseTitle] = useState("");
   const [newCourseGrade, setNewCourseGrade] = useState("");
 
@@ -84,8 +70,32 @@ const ProfilePage = ({ userType = "student" }) => {
     setIsEditing(true);
   };
 
-  const handleSaveClick = () => {
-    setIsEditing(false);
+  const handleSaveClick = async () => {
+    try {
+      const response = axios.put(
+        `${process.env.REACT_APP_BACKEND_URL}/user/save-changes-teacher`,
+        {
+          userId: user.uid,
+          subject,
+          qualification,
+          experience,
+          currentSchool,
+          achievements,
+          courses,
+          phone,
+          fullName,
+          location,
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      setIsEditing(false);
+      console.log("profile updated successfully");
+    } catch (error) {
+      console.log("Error occured during profile update");
+    }
+
     // You can add functionality here to save changes to a database or API
   };
 
@@ -110,13 +120,17 @@ const ProfilePage = ({ userType = "student" }) => {
 
   const handleAddCourse = () => {
     if (newCourseTitle.trim()) {
-      const courseData = isTeacher
-        ? { title: newCourseTitle, students: 0 }
-        : { title: newCourseTitle, grade: newCourseGrade };
+      const courseData = { title: newCourseTitle, grade: newCourseGrade };
       setCourses([...courses, courseData]);
       setNewCourseTitle("");
       setNewCourseGrade("");
     }
+  };
+
+  const handleStudentChange = (index, value) => {
+    const newCourses = [...courses];
+    newCourses[index].students = value;
+    setCourses(newCourses);
   };
 
   return (
@@ -140,65 +154,46 @@ const ProfilePage = ({ userType = "student" }) => {
                 <input
                   type="text"
                   value={fullName}
-                  onChange={(e) => setUserName(e.target.value)}
+                  onChange={(e) => setFullName(e.target.value)}
                   className="bg-gray-700 border border-gray-600 rounded px-2"
                 />
               ) : (
                 fullName
               )}
             </h2>
-           
+            <p className="text-gray-400 flex items-center">
+              <MapPin className="w-4 h-4 mr-2" />
+              {isEditing ? (
+                <input
+                  type="email"
+                  value={location}
+                  onChange={(e) => setLocation(e.target.value)}
+                  className="bg-gray-700 border border-gray-600 rounded px-2"
+                />
+              ) : (
+                location
+              )}
+            </p>
           </div>
           <div className="flex flex-wrap gap-2">
-            {badges.map((badge, index) => (
+            {subject.map((sub, index) => (
               <Badge
                 key={index}
                 variant="secondary"
                 className="bg-blue-500 hover:bg-blue-600"
               >
-                {badge}
+                {sub}
               </Badge>
             ))}
           </div>
           <div className="space-y-2">
-            <p className="text-gray-300 flex items-center">
-              {isTeacher ? (
-                <>
-                  <Briefcase className="w-4 h-4 mr-2" />
-                  {isEditing ? (
-                    <input
-                      type="text"
-                      value={userRole}
-                      onChange={(e) => setUserRole(e.target.value)}
-                      className="bg-gray-700 border border-gray-600 rounded px-2"
-                    />
-                  ) : (
-                    userRole
-                  )}
-                </>
-              ) : (
-                <>
-                  <GraduationCap className="w-4 h-4 mr-2" />
-                  {isEditing ? (
-                    <input
-                      type="text"
-                      value={userRole}
-                      onChange={(e) => setUserRole(e.target.value)}
-                      className="bg-gray-700 border border-gray-600 rounded px-2"
-                    />
-                  ) : (
-                    userRole
-                  )}
-                </>
-              )}
-            </p>
             <p className="text-gray-300 flex items-center">
               <Mail className="w-4 h-4 mr-2" />
               {isEditing ? (
                 <input
                   type="email"
                   value={email}
-                  onChange={(e) => setUserEmail(e.target.value)}
+                  onChange={(e) => setEmail(e.target.value)}
                   className="bg-gray-700 border border-gray-600 rounded px-2"
                 />
               ) : (
@@ -210,12 +205,12 @@ const ProfilePage = ({ userType = "student" }) => {
               {isEditing ? (
                 <input
                   type="text"
-                  value={userPhone}
-                  onChange={(e) => setUserPhone(e.target.value)}
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
                   className="bg-gray-700 border border-gray-600 rounded px-2"
                 />
               ) : (
-                userPhone
+                phone
               )}
             </p>
           </div>
@@ -280,14 +275,16 @@ const ProfilePage = ({ userType = "student" }) => {
                       }
                       className="bg-gray-700 border border-gray-600 rounded px-2 flex-1"
                     />
-                    {isTeacher ? (
-                      <span className="ml-2 text-gray-400">
-                        Students: {course.students}
-                      </span>
-                    ) : (
-                      <span className="ml-2 text-gray-400">
-                        Grade: {course.grade}
-                      </span>
+                    {isTeacher && (
+                      <input
+                        type="number"
+                        value={course.students}
+                        onChange={(e) =>
+                          handleStudentChange(index, e.target.value)
+                        }
+                        className="bg-gray-700 border border-gray-600 rounded px-2 ml-2 flex-1"
+                        placeholder="Number of students"
+                      />
                     )}
                   </>
                 ) : (
@@ -314,7 +311,7 @@ const ProfilePage = ({ userType = "student" }) => {
               />
               {isTeacher && (
                 <input
-                  type="text"
+                  type="num"
                   value={newCourseGrade}
                   onChange={(e) => setNewCourseGrade(e.target.value)}
                   placeholder="Grade"
