@@ -7,8 +7,40 @@ import { Card, CardContent, CardHeader, CardTitle } from "../Home/ui/Card";
 import { UserContext } from "../../Context/UserContext";
 import { ThemeContext } from "../../Context/ThemeContext";
 import { useNavigate } from "react-router-dom";
-import { Upload, FileText, Edit } from "lucide-react";
+import { Upload, FileText, Edit, Lightbulb } from "lucide-react";
 import CreateManually from "./quiz/CreateManually";
+
+const ManualQuestionInput = ({
+  question,
+  options,
+  correctAnswer,
+  onChange,
+  index,
+}) => (
+  <div className="mb-4 space-y-2">
+    <Input
+      type="text"
+      value={question}
+      onChange={(e) => onChange(index, "question", e.target.value)}
+      placeholder="Question"
+    />
+    {options.map((option, optionIndex) => (
+      <Input
+        key={optionIndex}
+        type="text"
+        value={option}
+        onChange={(e) => onChange(index, "option", e.target.value, optionIndex)}
+        placeholder={`Option ${optionIndex + 1}`}
+      />
+    ))}
+    <Input
+      type="text"
+      value={correctAnswer}
+      onChange={(e) => onChange(index, "correctAnswer", e.target.value)}
+      placeholder="Correct Answer"
+    />
+  </div>
+);
 
 export default function CreateQuiz() {
   const [selectedFile, setSelectedFile] = useState(null);
@@ -33,6 +65,11 @@ export default function CreateQuiz() {
       id: "notes",
     },
     {
+      name: "Create from Topic",
+      icon: <Lightbulb className="h-4 w-4" />,
+      id: "topic",
+    },
+    {
       name: "Create Manually",
       icon: <Edit className="h-4 w-4" />,
       id: "manual",
@@ -48,6 +85,8 @@ export default function CreateQuiz() {
     setCreateMethod(method);
     if (method === "notes") {
       document.getElementById("fileInput").click();
+    } else {
+      setIsModalOpen(true);
     }
   };
 
@@ -77,6 +116,7 @@ export default function CreateQuiz() {
     const requestData = {
       pdfText: createMethod === "notes" ? pdfText : undefined,
       fileName: createMethod === "notes" ? fileName : undefined,
+      topic: createMethod === "topic" ? topicInput : undefined,
       numQuestions,
       difficulty,
     };
@@ -99,10 +139,33 @@ export default function CreateQuiz() {
     }
   };
 
+  const handleManualQuestionChange = (index, field, value, optionIndex) => {
+    const updatedQuestions = [...manualQuestions];
+    if (field === "option") {
+      updatedQuestions[index].options[optionIndex] = value;
+    } else {
+      updatedQuestions[index][field] = value;
+    }
+    setManualQuestions(updatedQuestions);
+  };
+
+  const addManualQuestion = () => {
+    setManualQuestions([
+      ...manualQuestions,
+      { question: "", options: ["", "", "", ""], correctAnswer: "" },
+    ]);
+  };
+
   const submitQuiz = async () => {
     const requestData = {
       questions: generatedQuestions,
-      fileName: createMethod === "notes" ? fileName : "Manual Questions",
+      fileName:
+        createMethod === "notes"
+          ? fileName
+          : createMethod === "topic"
+          ? topicInput
+          : "Manual Questions",
+      topic: createMethod === "topic" ? topicInput : undefined,
       teacherId: uid,
     };
 
@@ -131,11 +194,12 @@ export default function CreateQuiz() {
       <h2 className="text-4xl font-bold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600">
         Create a Quiz
       </h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
         {createOptions.map((option) => (
           <Button
             key={option.id}
             onClick={() => handleCreate(option.id)}
+            disabled={!!createMethod && createMethod !== option.id} // Disable if another method is selected
             className={`py-2 px-4 text-sm flex items-center justify-center transition-all duration-300 ease-in-out
               rounded-lg group relative overflow-hidden ${
                 createMethod === option.id
@@ -189,14 +253,25 @@ export default function CreateQuiz() {
                         name="numQuestions"
                         value={num}
                         checked={numQuestions === num}
-                        onChange={() => setNumQuestions(num)}
-                        className="text-purple-500 focus:ring-purple-500"
+                        onChange={(e) =>
+                          setNumQuestions(Number(e.target.value))
+                        }
                       />
                       <span>{num}</span>
                     </label>
                   ))}
                 </div>
               </div>
+              {createMethod === "topic" && (
+                <div className="mb-4">
+                  <label className="text-gray-300">Enter Topic</label>
+                  <Input
+                    type="text"
+                    value={topicInput}
+                    onChange={(e) => setTopicInput(e.target.value)}
+                  />
+                </div>
+              )}
               <div className="mb-4">
                 <label className="text-gray-300">Difficulty</label>
                 <div className="flex flex-col">
@@ -210,8 +285,7 @@ export default function CreateQuiz() {
                         name="difficulty"
                         value={level}
                         checked={difficulty === level}
-                        onChange={() => setDifficulty(level)}
-                        className="text-purple-500 focus:ring-purple-500"
+                        onChange={(e) => setDifficulty(e.target.value)}
                       />
                       <span>
                         {level.charAt(0).toUpperCase() + level.slice(1)}
@@ -220,49 +294,37 @@ export default function CreateQuiz() {
                   ))}
                 </div>
               </div>
+              <div className="flex items-center justify-between">
+                <Button onClick={generateQuestions} disabled={isLoading}>
+                  {isLoading ? "Generating..." : "Generate Questions"}
+                </Button>
+                <Button
+                  onClick={() => setIsModalOpen(false)}
+                  variant="secondary"
+                >
+                  Cancel
+                </Button>
+              </div>
             </CardContent>
-            <div className="flex justify-end mt-4">
-              <Button
-                onClick={generateQuestions}
-                disabled={isLoading}
-                className="bg-purple-600 hover:bg-purple-700"
-              >
-                {isLoading ? "Loading..." : "Generate Questions"}
-              </Button>
-            </div>
           </Card>
         )
       )}
       {generatedQuestions.length > 0 && (
-        <div className="mt-8">
-          <h2 className="text-2xl font-bold mb-4 text-white">
-            Generated Questions
-          </h2>
+        <div className="mt-6">
+          <h3 className="text-white mb-4">Generated Questions:</h3>
           {generatedQuestions.map((q, index) => (
-            <div key={index} className="mb-6 bg-gray-800 p-4 rounded-lg">
-              <h3 className="text-lg font-semibold text-white">
-                {index + 1}. {q.text}
-              </h3>
-              <ul className="mt-2 space-y-1">
+            <div key={index} className="mb-4">
+              <strong className="text-gray-200">
+                {index + 1}. {q.question}
+              </strong>
+              <ul className="list-disc list-inside text-gray-400">
                 {q.options.map((option, optionIndex) => (
-                  <li key={optionIndex} className="text-gray-300">
-                    {option}
-                  </li>
+                  <li key={optionIndex}>{option}</li>
                 ))}
               </ul>
-              <p className="mt-2 font-bold text-purple-400">
-                Correct Answer: {q.correctAnswer}
-              </p>
             </div>
           ))}
-          <div className="flex justify-end mt-6">
-            <Button
-              onClick={submitQuiz}
-              className="bg-green-600 hover:bg-green-700"
-            >
-              Submit Quiz
-            </Button>
-          </div>
+          <Button onClick={submitQuiz}>Submit Quiz</Button>
         </div>
       )}
     </div>

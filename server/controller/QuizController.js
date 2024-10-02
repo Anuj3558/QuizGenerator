@@ -1,39 +1,47 @@
 import mongoose from "mongoose";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import Quiz from "../model/QuizModal.js";
-console.log(process.env.API_KEY);
+
 const api = process.env.API_KEY;
 const genAI = new GoogleGenerativeAI("AIzaSyDkd5EeKWI7BZz9Fv2dFiSkEZGdqvhc5pk");
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
 const GenerateQuiz = async (req, res) => {
-  console.log(process.env.API_KEY);
   try {
     const { pdfText, topic, numQuestions, difficulty } = req.body;
 
-    // 1. Construct the prompt
-    const prompt = `
-        You are a quiz generator AI. Please generate ${numQuestions} questions related to the text "${pdfText}" at a "${difficulty}" difficulty level. 
-        For each question, provide the following structure:
-        - A question text
-        - An array of 4 answer options (label them A, B, C, and D)
-        - The correct answer (indicate the letter of the correct option, e.g., "A")
-
-        Make sure the questions are clear, concise, and appropriate for the specified difficulty level. Here’s an example of the output format you should follow:
-
-        [
-            {
-                "text": "What is the capital of France?",
-                "options": ["A: Paris", "B: Berlin", "C: Rome", "D: Madrid"],
-                "correctAnswer": "A"
-            },
-            {
-                "text": "What is the boiling point of water?",
-                "options": ["A: 100°C", "B: 90°C", "C: 80°C", "D: 110°C"],
-                "correctAnswer": "A"
-            }
-        ]
-        `;
+    // 1. Construct the appropriate prompt based on the availability of topic or pdfText
+    const prompt = topic
+      ? `You are a quiz generator AI. Please generate ${numQuestions} questions related to the topic "${topic}" at a "${difficulty}" difficulty level. 
+            For each question, provide the following structure:
+            - A question text
+            - An array of 4 answer options (label them A, B, C, and D)
+            - The correct answer (indicate the letter of the correct option, e.g., "A")
+    
+            Make sure the questions are clear, concise, and appropriate for the specified difficulty level. Here’s an example of the output format you should follow:
+    
+            [
+                {
+                    "text": "What is the capital of France?",
+                    "options": ["A: Paris", "B: Berlin", "C: Rome", "D: Madrid"],
+                    "correctAnswer": "A"
+                }
+            ]`
+      : `You are a quiz generator AI. Please generate ${numQuestions} questions related to the text "${pdfText}" at a "${difficulty}" difficulty level. 
+            For each question, provide the following structure:
+            - A question text
+            - An array of 4 answer options (label them A, B, C, and D)
+            - The correct answer (indicate the letter of the correct option, e.g., "A")
+    
+            Make sure the questions are clear, concise, and appropriate for the specified difficulty level. Here’s an example of the output format you should follow:
+    
+            [
+                {
+                    "text": "What is the capital of France?",
+                    "options": ["A: Paris", "B: Berlin", "C: Rome", "D: Madrid"],
+                    "correctAnswer": "A"
+                }
+            ]`;
 
     // 2. Generate questions using the model
     const generatedContent = await model.generateContent(prompt);
@@ -42,10 +50,10 @@ const GenerateQuiz = async (req, res) => {
     const json = generatedContent.response.candidates[0].content.parts;
 
     // Remove backticks and clean up the response
-    const cleanedText = json[0].text.replace(/`/g, ""); // Remove backticks if they exist
-
+    const cleanedText = json[0].text.replace(/`/g, "").slice(4); // Remove backticks if they exist
+    console.log(cleanedText);
     // Parse the cleaned text into JSON
-    const questions = JSON.parse(cleanedText.slice(4)); // Assuming the model returns a valid JSON string starting after "```json"
+    const questions = JSON.parse(cleanedText); // Assuming the model returns a valid JSON string
 
     // 3. Prepare questions for insertion
     const questionDocuments = questions.map((question) => ({
@@ -71,13 +79,12 @@ const GenerateQuiz = async (req, res) => {
   }
 };
 
-// Adjust the path and file extension as needed
-
 const submitQuiz = async (req, res) => {
   try {
     // Extract data from the request body
     const { fileName, questions, teacherId, deadline } = req.body;
     console.log(req.body);
+
     // Validate the incoming data
     if (!fileName || !questions || !teacherId) {
       return res.status(400).json({ message: "All fields are required." });
@@ -106,7 +113,6 @@ const submitQuiz = async (req, res) => {
       .json({ message: "Internal server error", error: error.message });
   }
 };
-
 const generateMannually = async (req, res) => {
   console.log(req.body);
   try {
@@ -152,5 +158,4 @@ const generateMannually = async (req, res) => {
       .json({ message: "Internal server error", error: error.message });
   }
 };
-
 export { GenerateQuiz, submitQuiz, generateMannually };
