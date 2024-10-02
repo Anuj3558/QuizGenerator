@@ -20,6 +20,7 @@ import { useAuth } from "./Context/AuthContext.js";
 import StudentDataForm from "./Compnents/Auth/StudentDataForm.jsx";
 import TeacherDataForm from "./Compnents/Auth/TeacherDataForm.jsx";
 import UserProvider from "./Context/UserContext.js";
+import UploadQuiz from "./Compnents/Dashboard/UploadQuiz.jsx";
 
 // import Login from "./Compnents";
 
@@ -45,6 +46,7 @@ function App() {
           ) : (
             <Route path="/complete-profile" element={<TeacherDataForm />} />
           )}
+          <Route path="/quiz-details" element={<UploadQuiz />} />
         </Routes>
         <Footer />
         {/* Notifications */}

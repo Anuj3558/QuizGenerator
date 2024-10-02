@@ -7,7 +7,10 @@ import AuthRouter from "./Router/AuthRouter.js";
 import dotenv from "dotenv";
 import UserRouter from "./Router/UserRouter.js";
 import { verifyToken } from "./controller/AuthController.js";
-import UploadRouter from "./Router/quizFileRoutes.js";
+
+import QuizRouter from "./Router/quizFileRoutes.js";
+
+
 
 dotenv.config(); // Load environment variables
 
@@ -34,6 +37,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use("/auth", AuthRouter);
 app.use("/user", verifyToken);
 app.use("/user", UserRouter);
+app.use("/api/quiz", QuizRouter);
 
 app.use('/api/quiz', UploadRouter);
 

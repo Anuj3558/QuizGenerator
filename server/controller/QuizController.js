@@ -3,7 +3,7 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 import Quiz from "../model/QuizModel.js";
 
 const api = process.env.API_KEY;
-const genAI = new GoogleGenerativeAI(process.env.API_KEY);
+const genAI = new GoogleGenerativeAI("AIzaSyDkd5EeKWI7BZz9Fv2dFiSkEZGdqvhc5pk");
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
 const GenerateQuiz = async (req, res) => {
