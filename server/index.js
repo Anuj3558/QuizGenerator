@@ -34,12 +34,9 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use("/auth", AuthRouter);
 app.use("/user", verifyToken);
 app.use("/user", UserRouter);
-<<<<<<< HEAD
+
 app.use('/api/quiz', UploadRouter);
-=======
 
-
->>>>>>> d35e330f63764d6c2a33d57526262f21318f1965
 // Start server
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
