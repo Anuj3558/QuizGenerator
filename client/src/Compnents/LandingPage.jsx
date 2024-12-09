@@ -34,7 +34,7 @@ export default function LandingPage() {
     }
   }, [user, loading, navigate,Cookie.get("_id")]);
   return (
-    <div className="min-h-screen poppins-regular pt-7 bg-gradient-to-br from-blue-950 to-black text-white overflow-hidden">
+    <div className="min-h-screen poppins-regular pt-7 bg-gradient-to-br from--950 to-black text-white overflow-hidden">
       <div className="container mx-auto px-4 py-16 relative">
         <Hero />
         <Features />
@@ -45,7 +45,7 @@ export default function LandingPage() {
 
       {/* Floating Motion Elements */}
       <motion.div
-        className="fixed top-20 left-10 w-20 h-20 bg-blue-500 rounded-full filter blur-3xl opacity-20"
+        className="fixed top-20 left-10 w-20 h-20 bg--500 rounded-full filter blur-3xl opacity-20"
         animate={{
           scale: [1, 1.2, 1],
           opacity: [0.2, 0.3, 0.2],

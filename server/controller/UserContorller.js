@@ -58,47 +58,27 @@ const completeProfile = async (req, res) => {
   }
 
   try {
-    // Find the user by ID
     const user = await User.findById(req.userId);
-
     if (!user) {
       return res.status(404).json({ message: "User not found." });
     }
 
-    // Check the user type and complete the profile accordingly
     if (user.userType === "Student") {
-      const studentProfile = await Student.findOne({ userId: user._id });
-
-      if (!studentProfile) {
-        // Create a new student profile if it doesn't exist
-        const newStudent = new Student({
-          userId: user.uid,
+      const studentProfile = await Student.findOneAndUpdate(
+        { userId: user._id },
+        {
           grade,
           school,
           achievements,
           enrolledCourses,
           learningStats,
-        });
-        await newStudent.save();
-      } else {
-        // Update the existing student profile
-        studentProfile.grade = grade || studentProfile.grade;
-        studentProfile.school = school || studentProfile.school;
-        studentProfile.achievements =
-          achievements || studentProfile.achievements;
-        studentProfile.enrolledCourses =
-          enrolledCourses || studentProfile.enrolledCourses;
-        studentProfile.learningStats =
-          learningStats || studentProfile.learningStats;
-        await studentProfile.save();
-      }
+        },
+        { new: true, upsert: true }  // upsert: true creates a new profile if one doesn't exist
+      );
     } else if (user.userType === "Teacher") {
-      const teacherProfile = await Teacher.findOne({ userId: user.uid });
-
-      if (!teacherProfile) {
-        // Create a new teacher profile if it doesn't exist
-        const newTeacher = new Teacher({
-          userId: user.uid,
+      const teacherProfile = await Teacher.findOneAndUpdate(
+        { userId: user._id },
+        {
           subject,
           qualification,
           experience,
@@ -106,42 +86,26 @@ const completeProfile = async (req, res) => {
           achievements,
           courses,
           teachingStats,
-        });
-        await newTeacher.save();
-      } else {
-        // Update the existing teacher profile
-        teacherProfile.subject = subject || teacherProfile.subject;
-        teacherProfile.qualification =
-          qualification || teacherProfile.qualification;
-        teacherProfile.experience = experience || teacherProfile.experience;
-        teacherProfile.currentSchool =
-          currentSchool || teacherProfile.currentSchool;
-        teacherProfile.achievements =
-          achievements || teacherProfile.achievements;
-        teacherProfile.courses = courses || teacherProfile.courses;
-        teacherProfile.teachingStats =
-          teachingStats || teacherProfile.teachingStats;
-        await teacherProfile.save();
-      }
+        },
+        { new: true, upsert: true }
+      );
     } else {
       return res.status(400).json({ message: "Invalid user type." });
     }
 
-    // Update the user status to 'Completed' once the profile is fully updated
     user.status = "Completed";
     await user.save();
 
     res.status(200).json({ message: "Profile completed successfully." });
   } catch (error) {
     console.error("Error completing profile:", error);
-    res
-      .status(500)
-      .json({ message: "Something went wrong. Please try again." });
+    res.status(500).json({ message: "Something went wrong. Please try again." });
   }
 };
+
 const fetchTeacher = async (req, res) => {
   const { userId } = req.body;
-  
+  console.log("user id of tescher", userId);
   try {
     const teacher = await Teacher.findOne({ userId });
     // console.log(teacher);

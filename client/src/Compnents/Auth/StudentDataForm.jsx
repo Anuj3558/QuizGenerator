@@ -4,13 +4,13 @@ import React, { useContext, useState } from 'react'
 import axios from 'axios'
 import Cookies from 'js-cookie'
 import { motion } from 'framer-motion'
-import { Plus, Minus } from 'lucide-react'
+import { Plus, Minus, ChevronRight } from 'lucide-react'
 import { ThemeContext } from '../../Context/ThemeContext'
 import { useNavigate } from 'react-router-dom'
 
 export default function StudentDataForm() {
   const { theme, setTheme, successMsg, setSuccessMsg, warningMsg, setWarningMsg, errMsg, setErrMsg } = useContext(ThemeContext)
-   const Navigate = useNavigate()
+  const Navigate = useNavigate()
   const [formData, setFormData] = useState({
     grade: '',
     school: '',
@@ -107,19 +107,19 @@ export default function StudentDataForm() {
   }
 
   return (
-    <div className="min-h-screen pt-40 bg-gray-900 text-white flex flex-col items-center justify-center p-4">
+    <div className="min-h-screen pt-20 bg-gradient-to-br from-blue-50 to-purple-50 text-gray-800 flex flex-col items-center justify-center p-4">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="w-full max-w-2xl bg-gray-800 rounded-lg shadow-xl p-8"
+        className="w-full max-w-2xl bg-white rounded-3xl shadow-2xl p-8 backdrop-filter backdrop-blur-lg bg-opacity-80"
       >
-        <h1 className="text-3xl font-bold mb-6 text-center bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-teal-400">
+        <h1 className="text-4xl font-bold mb-8 text-center bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-600">
           Student Data Form
         </h1>
         <form onSubmit={handleSubmit} className="space-y-8">
           <div>
-            <h2 className="text-2xl font-bold mb-4">Basic Information</h2>
+            <h2 className="text-2xl font-bold mb-4 text-gray-700">Basic Information</h2>
             <div className="space-y-4">
               <input
                 type="text"
@@ -127,7 +127,7 @@ export default function StudentDataForm() {
                 value={formData.grade}
                 onChange={handleInputChange}
                 placeholder="Grade"
-                className="w-full bg-gray-700 text-white rounded-md p-2"
+                className="w-full bg-gray-100 text-gray-800 rounded-full p-3 focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-200"
               />
               <input
                 type="text"
@@ -135,13 +135,13 @@ export default function StudentDataForm() {
                 value={formData.school}
                 onChange={handleInputChange}
                 placeholder="School"
-                className="w-full bg-gray-700 text-white rounded-md p-2"
+                className="w-full bg-gray-100 text-gray-800 rounded-full p-3 focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-200"
               />
             </div>
           </div>
 
           <div>
-            <h2 className="text-2xl font-bold mb-4">Achievements</h2>
+            <h2 className="text-2xl font-bold mb-4 text-gray-700">Achievements</h2>
             <div className="space-y-4">
               {formData.achievements.map((achievement, index) => (
                 <div key={index} className="flex items-center space-x-2">
@@ -150,16 +150,28 @@ export default function StudentDataForm() {
                     value={achievement}
                     onChange={(e) => handleArrayInputChange(index, e.target.value)}
                     placeholder="Achievement"
-                    className="flex-grow bg-gray-700 text-white rounded-md p-2"
+                    className="flex-grow bg-gray-100 text-gray-800 rounded-full p-3 focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-200"
                   />
                   {index === formData.achievements.length - 1 ? (
-                    <button type="button" onClick={addArrayField} className="p-2 bg-blue-500 rounded-md">
+                    <motion.button
+                      type="button"
+                      onClick={addArrayField}
+                      className="p-3 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition duration-200"
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                    >
                       <Plus size={20} />
-                    </button>
+                    </motion.button>
                   ) : (
-                    <button type="button" onClick={() => removeArrayField(index)} className="p-2 bg-red-500 rounded-md">
+                    <motion.button
+                      type="button"
+                      onClick={() => removeArrayField(index)}
+                      className="p-3 bg-red-500 text-white rounded-full hover:bg-red-600 transition duration-200"
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                    >
                       <Minus size={20} />
-                    </button>
+                    </motion.button>
                   )}
                 </div>
               ))}
@@ -167,7 +179,7 @@ export default function StudentDataForm() {
           </div>
 
           <div>
-            <h2 className="text-2xl font-bold mb-4">Enrolled Courses</h2>
+            <h2 className="text-2xl font-bold mb-4 text-gray-700">Enrolled Courses</h2>
             <div className="space-y-4">
               {formData.enrolledCourses.map((course, index) => (
                 <div key={index} className="space-y-2">
@@ -176,7 +188,7 @@ export default function StudentDataForm() {
                     value={course.title}
                     onChange={(e) => handleCourseInputChange(index, 'title', e.target.value)}
                     placeholder="Course Title"
-                    className="w-full bg-gray-700 text-white rounded-md p-2"
+                    className="w-full bg-gray-100 text-gray-800 rounded-full p-3 focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-200"
                   />
                   <div className="flex items-center space-x-2">
                     <input
@@ -184,16 +196,28 @@ export default function StudentDataForm() {
                       value={course.grade}
                       onChange={(e) => handleCourseInputChange(index, 'grade', e.target.value)}
                       placeholder="Grade"
-                      className="flex-grow bg-gray-700 text-white rounded-md p-2"
+                      className="flex-grow bg-gray-100 text-gray-800 rounded-full p-3 focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-200"
                     />
                     {index === formData.enrolledCourses.length - 1 ? (
-                      <button type="button" onClick={addCourse} className="p-2 bg-blue-500 rounded-md">
+                      <motion.button
+                        type="button"
+                        onClick={addCourse}
+                        className="p-3 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition duration-200"
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                      >
                         <Plus size={20} />
-                      </button>
+                      </motion.button>
                     ) : (
-                      <button type="button" onClick={() => removeCourse(index)} className="p-2 bg-red-500 rounded-md">
+                      <motion.button
+                        type="button"
+                        onClick={() => removeCourse(index)}
+                        className="p-3 bg-red-500 text-white rounded-full hover:bg-red-600 transition duration-200"
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                      >
                         <Minus size={20} />
-                      </button>
+                      </motion.button>
                     )}
                   </div>
                 </div>
@@ -202,12 +226,19 @@ export default function StudentDataForm() {
           </div>
 
           <div className="flex justify-end mt-8">
-            <button type="submit" className="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-md">
-              Submit
-            </button>
+            <motion.button
+              type="submit"
+              className="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-8 py-3 rounded-full hover:from-blue-600 hover:to-purple-700 transition duration-200 flex items-center space-x-2"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <span>Submit</span>
+              <ChevronRight size={20} />
+            </motion.button>
           </div>
         </form>
       </motion.div>
     </div>
   )
 }
+

@@ -7,21 +7,21 @@ const TestimonialCard = ({ name, role, content }) => (
   <motion.div
     whileHover={{ scale: 1.05, rotateY: 5 }}
     whileTap={{ scale: 0.95 }}
-    className="bg-gray-800 bg-opacity-50 backdrop-filter backdrop-blur-lg rounded-2xl p-6 border border-blue-500 shadow-lg hover:shadow-blue-500/50 transition-all duration-300"
+    className="bg-white bg-opacity-50 backdrop-filter backdrop-blur-lg rounded-2xl p-6 border border-blue-500 shadow-lg hover:shadow-blue-500/50 transition-all duration-300"
   >
     <div className="flex items-center mb-4">
       {[...Array(5)].map((_, i) => (
         <Star key={i} className="text-yellow-400 mr-1 h-5 w-5" />
       ))}
     </div>
-    <p className="text-gray-300 mb-4">{content}</p>
+    <p className="text-black mb-4">{content}</p>
     <div className="flex items-center">
       <div className="w-10 h-10 bg-gradient-to-r from-blue-400 to-purple-600 rounded-full flex items-center justify-center mr-3">
-        <User className="text-white h-6 w-6" />
+        <User className="text h-6 w-6" />
       </div>
       <div>
-        <div className="font-semibold text-white">{name}</div>
-        <div className="text-sm text-gray-400">{role}</div>
+        <div className="font-semibold text-black">{name}</div>
+        <div className="text-sm text-black">{role}</div>
       </div>
     </div>
   </motion.div>
@@ -44,7 +44,7 @@ const ReviewForm = () => {
   return (
     <motion.form
       onSubmit={handleSubmit}
-      className="mt-12 bg-gray-800 bg-opacity-50 md:w-[50%] mt-56 backdrop-filter backdrop-blur-lg rounded-2xl p-6 border border-purple-500 shadow-lg"
+      className="mt-12 bg-white bg-opacity-50 md:w-[50%] mt-56 backdrop-filter backdrop-blur-lg rounded-2xl p-6 border border-purple-500 shadow-lg"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.5 }}
@@ -58,7 +58,7 @@ const ReviewForm = () => {
           placeholder="Your Name"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          className="w-full bg-gray-700 bg-opacity-50 rounded-md border border-gray-600 focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 text-white px-4 py-2"
+          className="w-full bg-white-700 bg-opacity-50 rounded-md border border-white-600 focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 text-white px-4 py-2"
           required
         />
         <input
@@ -66,14 +66,14 @@ const ReviewForm = () => {
           placeholder="Your Role"
           value={role}
           onChange={(e) => setRole(e.target.value)}
-          className="w-full bg-gray-700 bg-opacity-50 rounded-md border border-gray-600 focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 text-white px-4 py-2"
+          className="w-full bg-white-700 bg-opacity-50 rounded-md border border-white-600 focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 text-white px-4 py-2"
           required
         />
         <textarea
           placeholder="Your Review"
           value={review}
           onChange={(e) => setReview(e.target.value)}
-          className="w-full bg-gray-700 bg-opacity-50 rounded-md border border-gray-600 focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 text-white px-4 py-2 h-32"
+          className="w-full bg-white-700 bg-opacity-50 rounded-md border border-white-600 focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 text-white px-4 py-2 h-32"
           required
         ></textarea>
         <motion.button
@@ -144,7 +144,7 @@ const Testimonials = () => {
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="text-4xl font-extrabold text-center mb-16"
+          className="text-4xl font-extrabold text-center  text-black mb-16"
         >
           What Our Users <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-600">Say</span>
         </motion.h2>

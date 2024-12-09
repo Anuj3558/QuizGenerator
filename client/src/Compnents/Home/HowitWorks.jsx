@@ -60,7 +60,7 @@ const HowItWorksSection = () => {
   };
 
   return (
-    <div ref={ref} className="text-white py-16 px-4 sm:px-6 lg:px-8">
+    <div ref={ref} className="text-black py-16 px-4 sm:px-6 lg:px-8">
       <motion.div
         variants={containerVariants}
         initial="hidden"
@@ -99,7 +99,7 @@ const HowItWorksSection = () => {
                 whileTap={{ scale: 0.9 }}
                 className="relative flex items-center justify-center w-12 h-12 bg-purple-500 rounded-full z-10"
               >
-                <step.icon className="w-6 h-6 text-white" />
+                <step.icon className="w-6 h-6 text-black" />
                 <motion.div
                   animate={{
                     scale: [1, 1.5, 1],

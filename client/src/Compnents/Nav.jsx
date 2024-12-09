@@ -99,7 +99,7 @@ const Nav = ({ isLoggedIn: initialLoggedIn = true }) => {
           <div className="-mr-2 -my-2 md:hidden">
             <Button
               variant="ghost"
-              className="text-gray-300 hover:text-white"
+              className="text-black hover:text-gray-400"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               aria-expanded={isMobileMenuOpen}
             >
@@ -116,7 +116,7 @@ const Nav = ({ isLoggedIn: initialLoggedIn = true }) => {
               <>
                 <Button
                   variant="ghost"
-                  className="text-gray-300 hover:text-white"
+                  className="text-black hover:text-gray-400"
                   onClick={handleDashboardClick} // Use the new click handler
                 >
                   Dashboard
@@ -124,7 +124,7 @@ const Nav = ({ isLoggedIn: initialLoggedIn = true }) => {
                 <Link to="/about">
                   <Button
                     variant="ghost"
-                    className="text-gray-300 hover:text-white"
+                    className="text-black hover:text-gray-400"
                   >
                     About Us
                   </Button>
@@ -136,7 +136,7 @@ const Nav = ({ isLoggedIn: initialLoggedIn = true }) => {
                 />
                 <Button
                   onClick={handleLogout}
-                  className="bg-red-600 hover:bg-red-700 text-white"
+                  className="bg-red-600 hover:bg-red-700 text-black"
                 >
                   Logout
                 </Button>
@@ -146,7 +146,7 @@ const Nav = ({ isLoggedIn: initialLoggedIn = true }) => {
                 <Link to="/login">
                   <Button
                     variant="ghost"
-                    className="text-gray-300 hover:text-white"
+                    className="text-black hover:text-black"
                     onClick={handleLogin}
                   >
                     Login
@@ -178,18 +178,18 @@ const Nav = ({ isLoggedIn: initialLoggedIn = true }) => {
                 <>
                   <Button
                     onClick={handleDashboardClick} // Use the new click handler
-                    className="w-full text-left text-gray-300 hover:text-white"
+                    className="w-full text-left text-black hover:text-gray-400"
                   >
                     Dashboard
                   </Button>
                   <Link to="/about">
-                    <Button className="w-full text-left text-gray-300 hover:text-white">
+                    <Button className="w-full text-left text-black hover:text-black">
                       About Us
                     </Button>
                   </Link>
                   <Button
                     onClick={handleLogout}
-                    className="w-full text-left bg-red-600 hover:bg-red-700 text-white"
+                    className="w-full text-left bg-red-600 hover:bg-red-700 text-black"
                   >
                     Logout
                   </Button>
@@ -197,7 +197,7 @@ const Nav = ({ isLoggedIn: initialLoggedIn = true }) => {
               ) : (
                 <>
                   <Link to="/login">
-                    <Button className="w-full text-left text-gray-300 hover:text-white">
+                    <Button className="w-full text-left text-black hover:text-black">
                       Login
                     </Button>
                   </Link>

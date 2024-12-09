@@ -1,8 +1,6 @@
-'use client'
-
 import React, { useContext, useState } from 'react'
 import { motion } from 'framer-motion'
-import { Plus, Minus } from 'lucide-react'
+import { Plus, Minus, Send } from 'lucide-react'
 import axios from 'axios'
 import Cookie from 'js-cookie'
 import { ThemeContext } from '../../Context/ThemeContext'
@@ -19,7 +17,7 @@ const TeacherDataForm = () => {
     errMsg,
     setErrMsg,
   } = useContext(ThemeContext)
- const Navigate = useNavigate();
+  const Navigate = useNavigate();
   const [formData, setFormData] = useState({
     subject: [''],
     qualification: '',
@@ -115,20 +113,20 @@ const TeacherDataForm = () => {
   }
 
   return (
-    <div className="min-h-screen pt-40 bg-gray-900 text-white flex flex-col items-center justify-center p-4">
+    <div className="min-h-screen pt-20 bg-gradient-to-br from-blue-50 to-indigo-100 text-gray-800 flex flex-col items-center justify-center p-4">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="w-full max-w-2xl bg-gray-800 rounded-lg shadow-xl p-8"
+        className="w-full max-w-2xl bg-white rounded-2xl shadow-xl p-8"
       >
-        <h1 className="text-3xl font-bold mb-6 text-center bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-600">
+        <h1 className="text-3xl font-bold mb-6 text-center bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-indigo-600">
           Teacher Profile Setup
         </h1>
         
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <h2 className="text-2xl font-bold mb-4">Basic Information</h2>
+            <h2 className="text-2xl font-bold mb-4 text-gray-700">Basic Information</h2>
             <div className="space-y-4">
               {formData.subject.map((subject, index) => (
                 <div key={index} className="flex items-center space-x-2">
@@ -137,16 +135,28 @@ const TeacherDataForm = () => {
                     value={subject}
                     onChange={(e) => handleArrayInputChange(index, 'subject', e.target.value)}
                     placeholder="Subject"
-                    className="flex-grow bg-gray-700 text-white rounded-md p-2"
+                    className="flex-grow bg-gray-100 text-gray-800 rounded-md p-2 focus:ring-2 focus:ring-blue-500 focus:outline-none transition duration-200"
                   />
                   {index === formData.subject.length - 1 ? (
-                    <button type="button" onClick={() => addArrayField('subject')} className="p-2 bg-blue-500 rounded-md">
+                    <motion.button
+                      type="button"
+                      onClick={() => addArrayField('subject')}
+                      className="p-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition duration-200"
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                    >
                       <Plus size={20} />
-                    </button>
+                    </motion.button>
                   ) : (
-                    <button type="button" onClick={() => removeArrayField('subject', index)} className="p-2 bg-red-500 rounded-md">
+                    <motion.button
+                      type="button"
+                      onClick={() => removeArrayField('subject', index)}
+                      className="p-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition duration-200"
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                    >
                       <Minus size={20} />
-                    </button>
+                    </motion.button>
                   )}
                 </div>
               ))}
@@ -156,7 +166,7 @@ const TeacherDataForm = () => {
                 value={formData.qualification}
                 onChange={handleInputChange}
                 placeholder="Qualification"
-                className="w-full bg-gray-700 text-white rounded-md p-2"
+                className="w-full bg-gray-100 text-gray-800 rounded-md p-2 focus:ring-2 focus:ring-blue-500 focus:outline-none transition duration-200"
               />
               <input
                 type="number"
@@ -164,7 +174,7 @@ const TeacherDataForm = () => {
                 value={formData.experience}
                 onChange={handleInputChange}
                 placeholder="Years of Experience"
-                className="w-full bg-gray-700 text-white rounded-md p-2"
+                className="w-full bg-gray-100 text-gray-800 rounded-md p-2 focus:ring-2 focus:ring-blue-500 focus:outline-none transition duration-200"
               />
               <input
                 type="text"
@@ -172,13 +182,13 @@ const TeacherDataForm = () => {
                 value={formData.currentSchool}
                 onChange={handleInputChange}
                 placeholder="Current School"
-                className="w-full bg-gray-700 text-white rounded-md p-2"
+                className="w-full bg-gray-100 text-gray-800 rounded-md p-2 focus:ring-2 focus:ring-blue-500 focus:outline-none transition duration-200"
               />
             </div>
           </div>
 
           <div>
-            <h2 className="text-2xl font-bold mb-4">Achievements</h2>
+            <h2 className="text-2xl font-bold mb-4 text-gray-700">Achievements</h2>
             <div className="space-y-4">
               {formData.achievements.map((achievement, index) => (
                 <div key={index} className="flex items-center space-x-2">
@@ -187,16 +197,28 @@ const TeacherDataForm = () => {
                     value={achievement}
                     onChange={(e) => handleArrayInputChange(index, 'achievements', e.target.value)}
                     placeholder="Achievement"
-                    className="flex-grow bg-gray-700 text-white rounded-md p-2"
+                    className="flex-grow bg-gray-100 text-gray-800 rounded-md p-2 focus:ring-2 focus:ring-blue-500 focus:outline-none transition duration-200"
                   />
                   {index === formData.achievements.length - 1 ? (
-                    <button type="button" onClick={() => addArrayField('achievements')} className="p-2 bg-blue-500 rounded-md">
+                    <motion.button
+                      type="button"
+                      onClick={() => addArrayField('achievements')}
+                      className="p-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition duration-200"
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                    >
                       <Plus size={20} />
-                    </button>
+                    </motion.button>
                   ) : (
-                    <button type="button" onClick={() => removeArrayField('achievements', index)} className="p-2 bg-red-500 rounded-md">
+                    <motion.button
+                      type="button"
+                      onClick={() => removeArrayField('achievements', index)}
+                      className="p-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition duration-200"
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                    >
                       <Minus size={20} />
-                    </button>
+                    </motion.button>
                   )}
                 </div>
               ))}
@@ -204,16 +226,16 @@ const TeacherDataForm = () => {
           </div>
 
           <div>
-            <h2 className="text-2xl font-bold mb-4">Courses</h2>
+            <h2 className="text-2xl font-bold mb-4 text-gray-700">Courses</h2>
             <div className="space-y-4">
               {formData.courses.map((course, index) => (
-                <div key={index} className="space-y-2">
+                <div key={index} className="space-y-2 p-4 bg-gray-50 rounded-lg">
                   <input
                     type="text"
                     value={course.title}
                     onChange={(e) => handleCourseInputChange(index, 'title', e.target.value)}
                     placeholder="Course Title"
-                    className="w-full bg-gray-700 text-white rounded-md p-2"
+                    className="w-full bg-white text-gray-800 rounded-md p-2 focus:ring-2 focus:ring-blue-500 focus:outline-none transition duration-200"
                   />
                   <div className="flex items-center space-x-2">
                     <input
@@ -221,16 +243,28 @@ const TeacherDataForm = () => {
                       value={course.students}
                       onChange={(e) => handleCourseInputChange(index, 'students', parseInt(e.target.value))}
                       placeholder="Number of Students"
-                      className="flex-grow bg-gray-700 text-white rounded-md p-2"
+                      className="flex-grow bg-white text-gray-800 rounded-md p-2 focus:ring-2 focus:ring-blue-500 focus:outline-none transition duration-200"
                     />
                     {index === formData.courses.length - 1 ? (
-                      <button type="button" onClick={addCourse} className="p-2 bg-blue-500 rounded-md">
+                      <motion.button
+                        type="button"
+                        onClick={addCourse}
+                        className="p-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition duration-200"
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                      >
                         <Plus size={20} />
-                      </button>
+                      </motion.button>
                     ) : (
-                      <button type="button" onClick={() => removeCourse(index)} className="p-2 bg-red-500 rounded-md">
+                      <motion.button
+                        type="button"
+                        onClick={() => removeCourse(index)}
+                        className="p-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition duration-200"
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                      >
                         <Minus size={20} />
-                      </button>
+                      </motion.button>
                     )}
                   </div>
                 </div>
@@ -239,12 +273,15 @@ const TeacherDataForm = () => {
           </div>
 
           <div className="flex justify-end mt-8">
-            <button
+            <motion.button
               type="submit"
-              className="px-6 py-2 bg-green-600 rounded-md flex items-center"
+              className="px-6 py-2 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-md flex items-center space-x-2 hover:from-blue-600 hover:to-indigo-700 transition duration-200"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
             >
-              Submit
-            </button>
+              <span>Submit</span>
+              <Send size={20} />
+            </motion.button>
           </div>
         </form>
       </motion.div>
@@ -253,3 +290,4 @@ const TeacherDataForm = () => {
 }
 
 export default TeacherDataForm
+

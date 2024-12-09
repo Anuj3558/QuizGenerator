@@ -17,7 +17,7 @@ const Input = ({ icon: Icon, ...props }) => (
     />
     <input
       {...props}
-      className="w-full bg-gray-900 border border-blue-500 rounded-md py-2 pl-10 pr-4 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition duration-200"
+      className="w-full bg-white border border-blue-500 rounded-md py-2 pl-10 pr-4 text-black placeholder-black-500 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition duration-200"
     />
   </div>
 );
@@ -115,14 +115,14 @@ const SignUpPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white flex items-center justify-center p-4">
+    <div className="min-h-screen bg- text-white flex items-center justify-center p-4">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
         className="w-full max-w-md"
       >
-        <div className="bg-gray-800 shadow-lg rounded-lg overflow-hidden">
+        <div className="bg-white shadow-lg rounded-lg overflow-hidden">
           <div className="p-8">
             <h2 className="text-3xl font-extrabold text-center mb-6">
               <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-600">
@@ -163,14 +163,14 @@ const SignUpPage = () => {
               </Button>
             </form>
             <div className="mt-6">
-              <Button onClick={handleGoogleSignUp} className="bg-gray-700 hover:bg-gray-600" disabled={loading}>
+              <Button onClick={handleGoogleSignUp} className="bg-black-700 hover:bg-black-600" disabled={loading}>
                 <FaGoogle className="inline-block mr-2" size={18} />
                 {loading ? 'Signing Up...' : 'Sign up with Google'}
               </Button>
             </div>
           </div>
-          <div className="px-8 py-4 bg-gray-700 text-center">
-            <p className="text-sm">
+          <div className="px-8 py-4 text-center">
+            <p className="text-sm text-black">
               Already have an account?{" "}
               <a href="/login" className="text-blue-400 hover:underline">
                 Log in

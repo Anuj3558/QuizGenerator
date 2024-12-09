@@ -1,22 +1,56 @@
-import React, { useEffect } from 'react';
-import { motion, useAnimation, useMotionValue, useTransform } from 'framer-motion';
-import { useInView } from 'react-intersection-observer';
-import { Brain, Zap, Clock, BarChart } from "lucide-react";
-import FeatureCard from "./FeatureCard"
+import React, { useEffect } from 'react'
+import { motion, useAnimation } from 'framer-motion'
+import { useInView } from 'react-intersection-observer'
+import { Brain, Zap, Clock, BarChart } from 'lucide-react'
 
+
+const Card = ({ children, className = '' }) => (
+  <div className={`bg-white/50 backdrop-blur-md border border-gray-200 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 ${className}`}>
+    {children}
+  </div>
+)
+
+const CardHeader = ({ children, className = '' }) => (
+  <div className={`p-6 ${className}`}>
+    {children}
+  </div>
+)
+
+ const CardContent = ({ children, className = '' }) => (
+  <div className={`px-6 pb-6 ${className}`}>
+    {children}
+  </div>
+)
+ const CardTitle = ({ children, className = '' }) => (
+  <h3 className={`text-xl font-semibold text-gray-800 ${className}`}>
+    {children}
+  </h3>
+)
+
+const FeatureCard = ({ icon: Icon, title, description }) => (
+  <Card>
+    <CardHeader>
+      <Icon className="w-12 h-12 text-blue-500 mb-4" />
+      <CardTitle>{title}</CardTitle>
+    </CardHeader>
+    <CardContent>
+      <p className="text-gray-600">{description}</p>
+    </CardContent>
+  </Card>
+)
 
 const Features = () => {
-  const controls = useAnimation();
+  const controls = useAnimation()
   const [ref, inView] = useInView({
     threshold: 0.1,
     triggerOnce: true
-  });
+  })
 
   useEffect(() => {
     if (inView) {
-      controls.start("visible");
+      controls.start("visible")
     }
-  }, [controls, inView]);
+  }, [controls, inView])
 
   const containerVariants = {
     hidden: {},
@@ -25,7 +59,7 @@ const Features = () => {
         staggerChildren: 0.1
       }
     }
-  };
+  }
 
   const itemVariants = {
     hidden: { y: 20, opacity: 0 },
@@ -33,18 +67,18 @@ const Features = () => {
       y: 0,
       opacity: 1
     }
-  };
+  }
 
   return (
-    <section className="py-20 overflow-hidden">
+    <section className="py-20 overflow-hidden 0">
       <div className="container mx-auto px-4">
         <motion.h2
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="text-4xl font-extrabold text-center mb-16"
+          className="text-4xl font-extrabold text-black text-center mb-16"
         >
-          Platform <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-600">Features</span>
+          Platform <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-indigo-600">Features</span>
         </motion.h2>
         <motion.div
           ref={ref}
@@ -66,7 +100,8 @@ const Features = () => {
         </motion.div>
       </div>
     </section>
-  );
-};
+  )
+}
 
-export default Features;
+export default Features
+
